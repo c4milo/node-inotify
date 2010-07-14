@@ -11,6 +11,12 @@ You must have [NodeJS][nodejs_dev] already installed to be able to build node-in
 
     $ node-waf configure build install
 
+## API
+  * **`var inotify = new Inotify(persistent)`** TODO
+  * **inotify.addWatch(arg):**  TODO
+  * **inotify.removeWatch(watch_descriptor):** TODO
+  * **inotify.close():** TODO
+
 ## Example of use
     sys     = require('sys');
     fs      = require('fs');
@@ -66,7 +72,15 @@ You must have [NodeJS][nodejs_dev] already installed to be able to build node-in
 
     var home2_wd = inotify.addWatch(home2_dir);
 
+
 ## Inotify Events
+ ###Watch flags:
+ * **inotify.IN_ONLYDIR:** Only watch the path if it is a directory.
+ * **inotify.IN_DONT_FOLLOW:** Do not follow symbolics links
+ * **inotify.IN_ONESHOT:** Only send event once
+ * **inotify.IN_MASK_ADD:** Add (OR) events to watch mask for this pathname if it already exists (instead of replacing mask).
+
+ ### Watch for:
  * **inotify.IN_ACCESS:** File was accessed (read)
  * **inotify.IN_ATTRIB:** Metadata changed, e.g., permissions, timestamps, extended attributes, link count (since Linux 2.6.25), UID, GID, etc.
  * **inotify.IN_CLOSE_WRITE:** File opened for writing was closed
@@ -78,23 +92,15 @@ You must have [NodeJS][nodejs_dev] already installed to be able to build node-in
  * **inotify.IN_MOVE_SELF:** Watched file/directory was itself moved
  * **inotify.IN_MOVED_FROM:** File moved out of the watched directory
  * **inotify.IN_MOVED_TO:** File moved into watched directory
-IN_OPEN); //File was opened
-IN_IGNORED); // Watch was removed explicitly (inotify.watch.rm) or
-                                                       //automatically (file was deleted, or file system was
-                                                        //unmounted)
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_ISDIR); //Subject of this event is a directory
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_Q_OVERFLOW); //Event queue overflowed (wd is -1 for this event)
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_UNMOUNT); //File system containing watched object was unmounted
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_ALL_EVENTS);
+ * **inotify.IN_OPEN:** File was opened
+ * **inotify.IN_IGNORED:** Watch was removed explicitly with inotify.removeWatch(watch_descriptor) or automatically (the file was deleted, or the file system was unmounted)
+ * **inotify.IN_ISDIR:** Subject of this event is a directory
+ * **inotify.IN_Q_OVERFLOW:** Event queue overflowed (wd is -1 for this event)
+ * **inotify.IN_UNMOUNT:** File system containing the watched object was unmounted
+ * **inotify.IN_ALL_EVENTS:** watch for all kind of events
+ * **inotify.IN_CLOSE:**  (IN_CLOSE_WRITE | IN_CLOSE_NOWRITE)  Close
+ * **inotify.IN_MOVE:**  (IN_MOVED_FROM | IN_MOVED_TO)  Moves
 
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_ONLYDIR); // Only watch the path if it is a directory.
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_DONT_FOLLOW); // Do not follow a sym link
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_ONESHOT); // Only send event once
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_MASK_ADD); //Add (OR) events to watch mask for this pathname if it
-                                                        //already exists (instead of replacing mask).
-
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_CLOSE); // (IN_CLOSE_WRITE | IN_CLOSE_NOWRITE)  Close
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_MOVE);  //  (IN_MOVED_FROM | IN_MOVED_TO)  Moves
 
 ## License
 (The MIT License)
