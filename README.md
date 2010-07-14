@@ -16,7 +16,8 @@ You must have [NodeJS][nodejs_dev] already installed to be able to build node-in
     fs      = require('fs');
     Inotify = require('node-inotify').Inotify;
 
-    //You can use `new Inotify(false)` for non persistent mode
+    //You can use new Inotify(false) for non persistent fashion. Maybe to be used
+    // with Connect, ExpressJs, etc.
     var inotify = new Inotify(); //persistent by default
 
     var callback = function(event) {
@@ -51,26 +52,25 @@ You must have [NodeJS][nodejs_dev] already installed to be able to build node-in
         }
         //sys.puts(sys.inspect(event));
     }
-    var home_dir = { path: '/home/camilo',
-                    watch_for: inotify.IN_ALL_EVENTS,
-                    callback: callback
+    var home_dir = { path:      '/home/camilo',
+                     watch_for: inotify.IN_ALL_EVENTS,
+                     callback:  callback
                   };
 
     var home_watch_descriptor = inotify.addWatch(home_dir);
 
-    var home2_dir = { path: '/home/bob',
-                    watch_for: inotify.IN_ALL_EVENTS,
-                    callback: callback
+    var home2_dir = { path:      '/home/bob',
+                      watch_for: inotify.IN_ALL_EVENTS,
+                      callback:  callback
                   };
 
     var home2_wd = inotify.addWatch(home2_dir);
 
 ## Inotify Events
-        * inotify.IN_ACCESS: File was accessed (read)
-        * inotify.IN_ATTRIB: Metadata changed, e.g., permissions, timestamps,
-        extended attributes, link count (since Linux 2.6.25), UID, GID, etc.
-        * inotify.IN_CLOSE_WRITE: File opened for writing was closed
-        * inotify.IN_CLOSE_NOWRITE: File not opened for writing was closed
+ * inotify.IN_ACCESS: File was accessed (read)
+ * inotify.IN_ATTRIB: Metadata changed, e.g., permissions, timestamps, extended attributes, link count (since Linux 2.6.25), UID, GID, etc.
+ * inotify.IN_CLOSE_WRITE: File opened for writing was closed
+ * inotify.IN_CLOSE_NOWRITE: File not opened for writing was closed
         NODE_DEFINE_CONSTANT(object_tmpl, IN_CREATE); //File/directory created in watched directory
         NODE_DEFINE_CONSTANT(object_tmpl, IN_DELETE); //File/directory deleted from watched directory
         NODE_DEFINE_CONSTANT(object_tmpl, IN_DELETE_SELF); //Watched file/directory was itself deleted
