@@ -67,8 +67,8 @@ You must have [NodeJS][nodejs_dev] already installed to be able to build node-in
     var home2_wd = inotify.addWatch(home2_dir);
 
 ## Inotify Events
- * inotify.IN_ACCESS: File was accessed (read)
- * inotify.IN_ATTRIB: Metadata changed, e.g., permissions, timestamps, extended attributes, link count (since Linux 2.6.25), UID, GID, etc.
+ * **inotify.IN_ACCESS:** File was accessed (read)
+ * **inotify.IN_ATTRIB:** Metadata changed, e.g., permissions, timestamps, extended attributes, link count (since Linux 2.6.25), UID, GID, etc.
  * inotify.IN_CLOSE_WRITE: File opened for writing was closed
  * inotify.IN_CLOSE_NOWRITE: File not opened for writing was closed
         NODE_DEFINE_CONSTANT(object_tmpl, IN_CREATE); //File/directory created in watched directory
