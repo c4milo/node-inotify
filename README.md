@@ -12,6 +12,7 @@ You must have [NodeJS][nodejs_dev] already installed to be able to build node-in
     $ node-waf configure build install
 
 ## Example of use
+    [example][code_example]
 <script src="http://gist.github.com/476119.js"></script>
 
     sys     = require('sys');
@@ -129,4 +130,5 @@ IN THE SOFTWARE.
 [inotify.7]: http://www.kernel.org/doc/man-pages/online/pages/man7/inotify.7.html "http://www.kernel.org/doc/man-pages/online/pages/man7/inotify.7.html"
 [nodejs_home]: http://www.nodejs.org
 [nodejs_dev]: http://github.com/ry/node
+[code_example]: http://gist.github.com/476119
 
