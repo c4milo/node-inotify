@@ -74,7 +74,7 @@ You must have [NodeJS][nodejs_dev] already installed to be able to build node-in
 
 
 ## Inotify Events
-### Watch flags:
+### Flags:
  * **inotify.IN_ONLYDIR:** Only watch the path if it is a directory.
  * **inotify.IN_DONT_FOLLOW:** Do not follow symbolics links
  * **inotify.IN_ONESHOT:** Only send event once
