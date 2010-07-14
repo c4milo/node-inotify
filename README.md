@@ -7,11 +7,11 @@ itself, and for files inside the directory. [(ref: GNU/Linux Manual)][inotify.7]
 [inotify.7]: http://www.kernel.org/doc/man-pages/online/pages/man7/inotify.7.html "http://www.kernel.org/doc/man-pages/online/pages/man7/inotify.7.html"
 [nodejs]: http://www.nodejs.org
 
-# Inotify Events
-
+## Building
 
 ## Example
 
+## Inotify Events
 
 
 ## License
