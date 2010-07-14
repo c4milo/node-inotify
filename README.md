@@ -12,6 +12,8 @@ You must have [NodeJS][nodejs_dev] already installed to be able to build node-in
     $ node-waf configure build install
 
 ## Example of use
+    <script src="http://gist.github.com/476119.js"></script>
+
     sys     = require('sys');
     fs      = require('fs');
     Inotify = require('node-inotify').Inotify;
