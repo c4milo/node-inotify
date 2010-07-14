@@ -74,13 +74,13 @@ You must have [NodeJS][nodejs_dev] already installed to be able to build node-in
 
 
 ## Inotify Events
-
+### Watch flags:
  * **inotify.IN_ONLYDIR:** Only watch the path if it is a directory.
  * **inotify.IN_DONT_FOLLOW:** Do not follow symbolics links
  * **inotify.IN_ONESHOT:** Only send event once
  * **inotify.IN_MASK_ADD:** Add (OR) events to watch mask for this pathname if it already exists (instead of replacing mask).
 
-
+### Watch for:
  * **inotify.IN_ACCESS:** File was accessed (read)
  * **inotify.IN_ATTRIB:** Metadata changed, e.g., permissions, timestamps, extended attributes, link count (since Linux 2.6.25), UID, GID, etc.
  * **inotify.IN_CLOSE_WRITE:** File opened for writing was closed
