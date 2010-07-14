@@ -1,0 +1,21 @@
+{   "name" : "node-inotify",
+    "version": "0.0.1",
+    "author": "Camilo Aguilar - http://github.com/c4milo",
+    "email": "camilo.aguilar@gmail.com",
+    "description" : "inotify bindings for v8 javascript engine"
+    "repositories": [
+       {
+            "type": "git",
+            "url": "http://github.com/c4milo/node-inotify.git"
+       }
+    ],
+    "scripts": {
+       "install": "node-waf install",
+       "uninstall": "node-waf uninstall",
+       "build": "node-waf clean configure build",
+       "doc": "",
+       "test": "sudo node test.js"
+   },
+   "engines": ["v8", "node"]
+}
+
