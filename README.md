@@ -16,8 +16,8 @@ You must have [NodeJS][nodejs_dev] already installed to be able to build node-in
     fs      = require('fs');
     Inotify = require('node-inotify').Inotify;
 
+    //You can use `new Inotify(false)` for non persistent mode
     var inotify = new Inotify(); //persistent by default
-You can use `new Inotify(false)` for non persistent mode
 
     var callback = function(event) {
         var mask = event.mask;
