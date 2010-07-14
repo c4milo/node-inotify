@@ -63,8 +63,6 @@ namespace NodeInotify {
         NODE_DEFINE_CONSTANT(object_tmpl, IN_CLOSE); // (IN_CLOSE_WRITE | IN_CLOSE_NOWRITE)  Close
         NODE_DEFINE_CONSTANT(object_tmpl, IN_MOVE);  //  (IN_MOVED_FROM | IN_MOVED_TO)  Moves
 
-
-
         path_sym        = NODE_PSYMBOL("path");
         watch_for_sym   = NODE_PSYMBOL("watch_for");
         callback_sym    = NODE_PSYMBOL("callback");
@@ -83,13 +81,13 @@ namespace NodeInotify {
 
     Inotify::Inotify() : EventEmitter() {
         ev_init(&read_watcher, Inotify::Callback);
-        read_watcher.data = this;  //preserving my reference to use inside Inotify::Callback
+        read_watcher.data = this;  //preserving my reference to use it inside Inotify::Callback
         persistent = true;
     }
 
     Inotify::Inotify(bool nonpersistent) : EventEmitter() {
         ev_init(&read_watcher, Inotify::Callback);
-        read_watcher.data = this;  //preserving my reference to use inside Inotify::Callback
+        read_watcher.data = this;  //preserving my reference to use it inside Inotify::Callback
         persistent = nonpersistent;
     }
 
@@ -246,7 +244,6 @@ namespace NodeInotify {
         Local<Value> callback_ = inotify->handle_->Get(callback_sym);
         Local<Function> callback = Local<Function>::Cast(callback_);
 
-        //reading inotify events and build the response object
         char buffer[BUF_LEN];
 
         int length = read(inotify->fd, buffer, BUF_LEN);
