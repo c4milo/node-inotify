@@ -1,4 +1,4 @@
-# node-inotify - monitoring file system events with [NodeJS][nodejs]
+# Node-inotify - monitoring file system events with [NodeJS][nodejs]
 The inotify API provides a mechanism for monitoring file system events.
 Inotify can be used to monitor individual files, or to monitor directories.
 When a directory is monitored, inotify will return events for the directory
