@@ -2,7 +2,7 @@
 The inotify API provides a mechanism for monitoring file system events.
 Inotify can be used to monitor individual files, or to monitor directories.
 When a directory is monitored, inotify will return events for the directory
-itself, and for files inside the directory. [Linux Manual][inotify.7]
+itself, and for files inside the directory. [(ref: GNU/Linux Manual)][inotify.7]
 
 [inotify.7]: http://www.kernel.org/doc/man-pages/online/pages/man7/inotify.7.html "http://www.kernel.org/doc/man-pages/online/pages/man7/inotify.7.html"
 
