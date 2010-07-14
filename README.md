@@ -69,17 +69,17 @@ You must have [NodeJS][nodejs_dev] already installed to be able to build node-in
 ## Inotify Events
  * **inotify.IN_ACCESS:** File was accessed (read)
  * **inotify.IN_ATTRIB:** Metadata changed, e.g., permissions, timestamps, extended attributes, link count (since Linux 2.6.25), UID, GID, etc.
- * inotify.IN_CLOSE_WRITE: File opened for writing was closed
- * inotify.IN_CLOSE_NOWRITE: File not opened for writing was closed
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_CREATE); //File/directory created in watched directory
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_DELETE); //File/directory deleted from watched directory
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_DELETE_SELF); //Watched file/directory was itself deleted
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_MODIFY); //File was modified
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_MOVE_SELF); //Watched file/directory was itself moved
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_MOVED_FROM); //File moved out of watched directory
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_MOVED_TO); //File moved into watched directory
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_OPEN); //File was opened
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_IGNORED); // Watch was removed explicitly (inotify.watch.rm) or
+ * **inotify.IN_CLOSE_WRITE:** File opened for writing was closed
+ * **inotify.IN_CLOSE_NOWRITE:** File not opened for writing was closed
+ * **inotify.IN_CREATE:** File/directory created in the watched directory
+ * **inotify.IN_DELETE:** File/directory deleted from the watched directory
+ * **inotify.IN_DELETE_SELF:** Watched file/directory was itself deleted
+ * **inotify.IN_MODIFY:** File was modified
+ * **inotify.IN_MOVE_SELF:** Watched file/directory was itself moved
+ * **inotify.IN_MOVED_FROM:** File moved out of the watched directory
+ * **inotify.IN_MOVED_TO:** File moved into watched directory
+IN_OPEN); //File was opened
+IN_IGNORED); // Watch was removed explicitly (inotify.watch.rm) or
                                                        //automatically (file was deleted, or file system was
                                                         //unmounted)
         NODE_DEFINE_CONSTANT(object_tmpl, IN_ISDIR); //Subject of this event is a directory
