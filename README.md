@@ -27,6 +27,18 @@ You can call this function as many times as you want to monitorize different pat
   * `inotify.removeWatch(watch_descriptor)`: Remove a watch associated with the watch_descriptor param and returns `true` if the action was succesful or `false` in the opposite case. Removing a watch cause an `inotify.IN_IGNORED` event to be generated for this watch descriptor.
   * `inotify.close()`: Remove all the watches and close the inotify's file descriptor. Returns `true` if the action was succesful or false in the opposite case.
 
+### Event object structure
+    var event = {   watch: Watch descriptor,
+                    mask: Mask of events,
+                    cookie: Cookie that permits associate events,
+                    name: Optional name of the object being watched
+                }
+
+The `event.name` property is only present when an event is returned for a file inside a
+watched directory; it identifies the file pathname relative to the watched
+directory.
+
+
 ## Example of use
     sys     = require('sys');
     fs      = require('fs');
