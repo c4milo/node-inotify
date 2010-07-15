@@ -16,15 +16,16 @@ You must have [NodeJS][nodejs_dev] already installed to be able to build node-in
     $ npm install inotify
 
 ## API
-  * **`var inotify = new Inotify()`:** Create a new instance of Inotify. By default it's in persistent mode.
+  * `var inotify = new Inotify()`: Create a new instance of Inotify. By default it's in persistent mode.
   `var inotify = new Inotify(false)` let you to use the non persistent mode.
-  * **inotify.addWatch(arg):**  Add a watch to monitorize events. The argument is an object as follows
-    { path: 'path to be monitorized',
-     watch_for: and optional OR'ed set of events to watch for. If it's not specified, it will use inotify.IN_ALL_EVENTS,
-     callback: Callback function that will receive each event.
+  * `inotify.addWatch(arg)`:  Add a watch to monitorize events. The argument is an object as follows
+    {
+        path: 'path to be monitorized',
+        watch_for: and optional OR'ed set of events to watch for. If it's not specified, it will use inotify.IN_ALL_EVENTS,
+        callback: Callback function that will receive each event.
     }
-  * **inotify.removeWatch(watch_descriptor):** TODO
-  * **inotify.close():** TODO
+  * `inotify.removeWatch(watch_descriptor)`: TODO
+  * `inotify.close()`: TODO
 
 ## Example of use
 This code
