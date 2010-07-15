@@ -10,7 +10,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#define NODE_INOTIFY_VERSION "v0.0.1"
+#define NODE_INOTIFY_VERSION "v0.1.0"
 
 using namespace v8;
 using namespace node;
