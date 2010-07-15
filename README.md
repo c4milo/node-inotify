@@ -17,6 +17,7 @@ You must have [NodeJS][nodejs_dev] already installed to be able to build node-in
 ## API
   * `var inotify = new Inotify()`: Create a new instance of Inotify. By default it's in persistent mode.
   You can specify `false` in `var inotify = new Inotify(false)` for use the non persistent mode.
+
   * `var wd = inotify.addWatch(arg)`:  Add a watch for files o directories and returns a watch descriptor. The argument is an object as follows
         var arg = { path: 'path to be monitorized',
                     watch_for: an optional OR'ed set of events to watch for.
@@ -24,8 +25,12 @@ You must have [NodeJS][nodejs_dev] already installed to be able to build node-in
                                inotify.IN_ALL_EVENTS by default,
                     callback: Callback function that will receive each event.
         }
-You can call this function as many times as you want to monitorize different paths
+You can call this function as many times as you want to monitorize different paths.
+Inotify monitoring of directories is not recursive: to monitor subdirectories
+under a directory, additional watches must be created.
+
   * `inotify.removeWatch(watch_descriptor)`: Remove a watch associated with the watch_descriptor param and returns `true` if the action was succesful or `false` in the opposite case. Removing a watch cause an `inotify.IN_IGNORED` event to be generated for this watch descriptor.
+
   * `inotify.close()`: Remove all the watches and close the inotify's file descriptor. Returns `true` if the action was succesful or false in the opposite case.
 
 ### Event object structure
