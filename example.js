@@ -1,4 +1,4 @@
-require.paths.unshift('build/default/src');
+//require.paths.unshift('build/default/src');
 sys     = require('sys');
 fs      = require('fs');
 http = require('http');
@@ -35,14 +35,7 @@ var callback = function(event) {
         sys.puts(type + 'watched moved');
     } else if(mask & inotify.IN_IGNORED) {
         sys.puts(type + 'watch was removed');
-        this.close();
     }
-    try {
-        this.removeWatch(event.watch);
-    } catch(error) {
-        sys.puts('-->' + error);
-    }
-
     //sys.puts(sys.inspect(event));
 }
 
@@ -53,9 +46,9 @@ var tmp_dir = { path: '/home/camilo',
 
 var watch = inotify.addWatch(tmp_dir);
 
-/*http.createServer(function (request, response) {
+http.createServer(function (request, response) {
     response.writeHead(200, {'Content-Type': 'text/plain'});
     response.end('Hello World\n');
 }).listen(8124);
-console.log('iniciando http server')*/
+console.log('iniciando http server')
 
