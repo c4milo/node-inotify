@@ -9,7 +9,11 @@ You must have [NodeJS][nodejs_dev] already installed to be able to build node-in
 
     git clone git://github.com/c4milo/node-inotify.git
 
-    $ node-waf configure build install
+    $ cd node-inotify
+    $ node-waf configure build
+
+### NPM
+    $npm install inotifyjs
 
 ## API
   * **`var inotify = new Inotify(persistent)`** TODO
@@ -18,6 +22,7 @@ You must have [NodeJS][nodejs_dev] already installed to be able to build node-in
   * **inotify.close():** TODO
 
 ## Example of use
+This code
     sys     = require('sys');
     fs      = require('fs');
     Inotify = require('node-inotify').Inotify;
@@ -74,11 +79,6 @@ You must have [NodeJS][nodejs_dev] already installed to be able to build node-in
 
 
 ## Inotify Events
-### Flags:
- * **inotify.IN_ONLYDIR:** Only watch the path if it is a directory.
- * **inotify.IN_DONT_FOLLOW:** Do not follow symbolics links
- * **inotify.IN_ONESHOT:** Only send event once
- * **inotify.IN_MASK_ADD:** Add (OR) events to watch mask for this pathname if it already exists (instead of replacing mask).
 
 ### Watch for:
  * **inotify.IN_ACCESS:** File was accessed (read)
@@ -93,13 +93,22 @@ You must have [NodeJS][nodejs_dev] already installed to be able to build node-in
  * **inotify.IN_MOVED_FROM:** File moved out of the watched directory
  * **inotify.IN_MOVED_TO:** File moved into watched directory
  * **inotify.IN_OPEN:** File was opened
+ * **inotify.IN_ALL_EVENTS:** watch for all kind of events
+ * **inotify.IN_CLOSE:**  (IN_CLOSE_WRITE | IN_CLOSE_NOWRITE)  Close
+ * **inotify.IN_MOVE:**  (IN_MOVED_FROM | IN_MOVED_TO)  Moves
+
+### Additional Flags:
+ * **inotify.IN_ONLYDIR:** Only watch the path if it is a directory.
+ * **inotify.IN_DONT_FOLLOW:** Do not follow symbolics links
+ * **inotify.IN_ONESHOT:** Only send event once
+ * **inotify.IN_MASK_ADD:** Add (OR) events to watch mask for this pathname if it already exists (instead of replacing mask).
+
+### The following bits may be set in the mask field returned in the callback
  * **inotify.IN_IGNORED:** Watch was removed explicitly with inotify.removeWatch(watch_descriptor) or automatically (the file was deleted, or the file system was unmounted)
  * **inotify.IN_ISDIR:** Subject of this event is a directory
  * **inotify.IN_Q_OVERFLOW:** Event queue overflowed (wd is -1 for this event)
  * **inotify.IN_UNMOUNT:** File system containing the watched object was unmounted
- * **inotify.IN_ALL_EVENTS:** watch for all kind of events
- * **inotify.IN_CLOSE:**  (IN_CLOSE_WRITE | IN_CLOSE_NOWRITE)  Close
- * **inotify.IN_MOVE:**  (IN_MOVED_FROM | IN_MOVED_TO)  Moves
+
 
 
 ## License
