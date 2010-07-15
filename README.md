@@ -18,14 +18,15 @@ You must have [NodeJS][nodejs_dev] already installed to be able to build node-in
 ## API
   * `var inotify = new Inotify()`: Create a new instance of Inotify. By default it's in persistent mode.
   `var inotify = new Inotify(false)` let you to use the non persistent mode.
-  * `inotify.addWatch(arg)`:  Add a watch to monitorize events. The argument is an object as follows
+  * `var wd = inotify.addWatch(arg)`:  Add a watch for files o directories and returns a watch descriptor. The argument is an object as follows
         {
             path: 'path to be monitorized',
-            watch_for: and optional OR'ed set of events to watch for. If they're not specified, it will use inotify.IN_ALL_EVENTS by default,
+            watch_for: an optional OR'ed set of events to watch for. If they're not specified, it will use inotify.IN_ALL_EVENTS by default,
             callback: Callback function that will receive each event.
         }
-  * `inotify.removeWatch(watch_descriptor)`: TODO
-  * `inotify.close()`: TODO
+You can call this function as many times as you want to monitorize different paths
+  * `inotify.removeWatch(watch_descriptor)`: Remove a watch associated with the watch_descriptor param and returns `true` if the action was succesful or `false` in the opposite case. Removing a watch cause an `inotify.IN_IGNORED` event to be generated for this watch descriptor.
+  * `inotify.close()`: Remove all the watches and close the inotify's file descriptor
 
 ## Example of use
 This code
