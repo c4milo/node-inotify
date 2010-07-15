@@ -105,7 +105,7 @@ You can call this function as many times as you want to monitorize different pat
  * **inotify.IN_ONESHOT:** Only send event once
  * **inotify.IN_MASK_ADD:** Add (OR) events to watch mask for this pathname if it already exists (instead of replacing mask).
 
-### The following bits may be set in the mask field returned in the callback
+### The following bits may be set in the `event.mask` property returned in the callback
  * **inotify.IN_IGNORED:** Watch was removed explicitly with inotify.removeWatch(watch_descriptor) or automatically (the file was deleted, or the file system was unmounted)
  * **inotify.IN_ISDIR:** Subject of this event is a directory
  * **inotify.IN_Q_OVERFLOW:** Event queue overflowed (wd is -1 for this event)
