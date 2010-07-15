@@ -26,7 +26,7 @@ You must have [NodeJS][nodejs_dev] already installed to be able to build node-in
                     callback: Callback function that will receive each event.
         }
 You can call this function as many times as you want to monitorize different paths.
-Inotify monitoring of directories is not recursive: to monitor subdirectories
+**Inotify monitoring of directories is not recursive**: to monitor subdirectories
 under a directory, additional watches must be created.
 
   * `inotify.removeWatch(watch_descriptor)`: Remove a watch associated with the watch_descriptor param and returns `true` if the action was succesful or `false` in the opposite case. Removing a watch cause an `inotify.IN_IGNORED` event to be generated for this watch descriptor.
