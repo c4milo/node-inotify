@@ -48,7 +48,7 @@ directory.
 ## Example of use
     sys     = require('sys');
     fs      = require('fs');
-    Inotify = require('node-inotify').Inotify;
+    Inotify = require('inotify').Inotify;
 
     //You can use new Inotify(false) for a non persistent fashion.
     var inotify = new Inotify(); //persistent by default
