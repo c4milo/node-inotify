@@ -7,8 +7,7 @@ itself, and for files inside the directory. [(ref: GNU/Linux Manual)][inotify.7]
 ## Installation
 You must have [NodeJS][nodejs_dev] already installed to be able to build node-inotify
 
-    git clone git://github.com/c4milo/node-inotify.git
-
+    $ git clone git://github.com/c4milo/node-inotify.git
     $ cd node-inotify
     $ node-waf configure build
 
