@@ -1,8 +1,7 @@
-//require.paths.unshift('build/default/src');
 sys     = require('sys');
 fs      = require('fs');
 http = require('http');
-Inotify = require('node-inotify').Inotify;
+Inotify = require('inotify').Inotify;
 
 var inotify = new Inotify(); //persistent by default, new Inotify(false) //no persistent
 
