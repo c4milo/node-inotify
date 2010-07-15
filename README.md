@@ -16,7 +16,7 @@ You must have [NodeJS][nodejs_dev] already installed to be able to build node-in
 
 ## API
   * `var inotify = new Inotify()`: Create a new instance of Inotify. By default it's in persistent mode.
-  `var inotify = new Inotify(false)` let you to use the non persistent mode.
+  You can specify `false` in `var inotify = new Inotify(false)` for use the non persistent mode.
   * `var wd = inotify.addWatch(arg)`:  Add a watch for files o directories and returns a watch descriptor. The argument is an object as follows
         {
             path: 'path to be monitorized',
