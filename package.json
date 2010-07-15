@@ -1,5 +1,5 @@
-{   "name" : "node-inotify",
-    "version": "0.0.1",
+{   "name" : "inotify",
+    "version": "0.1.0",
     "author": "Camilo Aguilar - http://github.com/c4milo",
     "email": "camilo.aguilar@gmail.com",
     "description" : "inotify bindings for v8 javascript engine"
@@ -10,12 +10,8 @@
        }
     ],
     "scripts": {
-       "install": "node-waf install",
-       "uninstall": "node-waf uninstall",
-       "build": "node-waf clean configure build",
-       "doc": "",
-       "test": "sudo node test.js"
+       "build": "node-waf configure build",
    },
-   "engines": ["v8", "node"]
+   "engines" : { "node" : ">=0.1.90" }
 }
 
