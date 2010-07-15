@@ -26,16 +26,14 @@ You must have [NodeJS][nodejs_dev] already installed to be able to build node-in
         }
 You can call this function as many times as you want to monitorize different paths
   * `inotify.removeWatch(watch_descriptor)`: Remove a watch associated with the watch_descriptor param and returns `true` if the action was succesful or `false` in the opposite case. Removing a watch cause an `inotify.IN_IGNORED` event to be generated for this watch descriptor.
-  * `inotify.close()`: Remove all the watches and close the inotify's file descriptor
+  * `inotify.close()`: Remove all the watches and close the inotify's file descriptor. Returns `true` if the action was succesful or false in the opposite case.
 
 ## Example of use
-This code
     sys     = require('sys');
     fs      = require('fs');
     Inotify = require('node-inotify').Inotify;
 
-    //You can use new Inotify(false) for non persistent fashion. Maybe to be used
-    // with Connect, ExpressJs, etc.
+    //You can use new Inotify(false) for a non persistent fashion.
     var inotify = new Inotify(); //persistent by default
 
     var callback = function(event) {
@@ -71,19 +69,17 @@ This code
         //sys.puts(sys.inspect(event));
     }
     var home_dir = { path:      '/home/camilo',
-                     watch_for: inotify.IN_ALL_EVENTS,
+                     watch_for: inotify.IN_OPEN | inotify.IN_CLOSE,
                      callback:  callback
                   };
 
     var home_watch_descriptor = inotify.addWatch(home_dir);
 
     var home2_dir = { path:      '/home/bob',
-                      watch_for: inotify.IN_ALL_EVENTS,
                       callback:  callback
                   };
 
     var home2_wd = inotify.addWatch(home2_dir);
-
 
 ## Inotify Events
 
