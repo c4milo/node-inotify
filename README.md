@@ -5,7 +5,7 @@ When a directory is monitored, inotify will return events for the directory
 itself, and for files inside the directory. [(ref: GNU/Linux Manual)][inotify.7]
 
 ## Installation
-You must have [NodeJS][nodejs_dev] already installed to be able to build node-inotify
+You must have [NodeJS][nodejs_dev] already installed to be able to build node-inotify.
 
     $ git clone git://github.com/c4milo/node-inotify.git
     $ cd node-inotify
@@ -16,9 +16,9 @@ You must have [NodeJS][nodejs_dev] already installed to be able to build node-in
 
 ## API
   * `var inotify = new Inotify()`: Create a new instance of Inotify. By default it's in persistent mode.
-  You can specify `false` in `var inotify = new Inotify(false)` for use the non persistent mode.
+  You can specify `false` in `var inotify = new Inotify(false)` to use the non persistent mode.
 
-  * `var wd = inotify.addWatch(arg)`:  Add a watch for files o directories and returns a watch descriptor. The argument is an object as follows
+  * `var wd = inotify.addWatch(arg)`:  Add a watch for files or directories. This will then return a watch descriptor. The argument is an object as follows
         var arg = { path: 'path to be monitorized',
                     watch_for: an optional OR'ed set of events to watch for.
                                If they're not specified, it will use
@@ -107,21 +107,21 @@ directory.
  * **inotify.IN_CLOSE_NOWRITE:** File not opened for writing was closed
  * **inotify.IN_CREATE:** File/directory created in the watched directory
  * **inotify.IN_DELETE:** File/directory deleted from the watched directory
- * **inotify.IN_DELETE_SELF:** Watched file/directory was itself deleted
+ * **inotify.IN_DELETE_SELF:** Watched file/directory was deleted
  * **inotify.IN_MODIFY:** File was modified
- * **inotify.IN_MOVE_SELF:** Watched file/directory was itself moved
+ * **inotify.IN_MOVE_SELF:** Watched file/directory was moved
  * **inotify.IN_MOVED_FROM:** File moved out of the watched directory
  * **inotify.IN_MOVED_TO:** File moved into watched directory
  * **inotify.IN_OPEN:** File was opened
- * **inotify.IN_ALL_EVENTS:** watch for all kind of events
+ * **inotify.IN_ALL_EVENTS:** Watch for all kind of events
  * **inotify.IN_CLOSE:**  (IN_CLOSE_WRITE | IN_CLOSE_NOWRITE)  Close
  * **inotify.IN_MOVE:**  (IN_MOVED_FROM | IN_MOVED_TO)  Moves
 
 ### Additional Flags:
  * **inotify.IN_ONLYDIR:** Only watch the path if it is a directory.
  * **inotify.IN_DONT_FOLLOW:** Do not follow symbolics links
- * **inotify.IN_ONESHOT:** Only send event once
- * **inotify.IN_MASK_ADD:** Add (OR) events to watch mask for this pathname if it already exists (instead of replacing mask).
+ * **inotify.IN_ONESHOT:** Only send events once
+ * **inotify.IN_MASK_ADD:** Add (OR) events to watch mask for this pathname if it already exists (instead of replacing the mask).
 
 ### The following bits may be set in the `event.mask` property returned in the callback
  * **inotify.IN_IGNORED:** Watch was removed explicitly with inotify.removeWatch(watch_descriptor) or automatically (the file was deleted, or the file system was unmounted)
