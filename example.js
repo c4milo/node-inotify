@@ -38,7 +38,7 @@ var callback = function(event) {
     //sys.puts(sys.inspect(event));
 }
 
-var tmp_dir = { path: '/home/camilo',
+var tmp_dir = { path: './',
                 watch_for: inotify.IN_ALL_EVENTS,
                 callback: callback
                };

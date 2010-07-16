@@ -12,6 +12,6 @@
     "scripts": {
        "install": "node-waf configure build"
     },
-    "main" : "./build/default/src/node-inotify"
+    "main" : "./build/default/src/inotify"
 }
 

@@ -93,9 +93,9 @@ namespace NodeInotify {
 
     Inotify::~Inotify() {
         if(!persistent) {
-            ev_ref(EV_DEFAULT_);
+            ev_ref(EV_DEFAULT_UC);
         }
-        ev_io_stop(EV_DEFAULT_ &read_watcher);
+        ev_io_stop(EV_DEFAULT_UC_ &read_watcher);
         assert(!ev_is_active(&read_watcher));
         assert(!ev_is_pending(&read_watcher));
     }
@@ -119,13 +119,13 @@ namespace NodeInotify {
         }
 
         ev_io_set(&inotify->read_watcher, inotify->fd, EV_READ);
-        ev_io_start(EV_DEFAULT_ &inotify->read_watcher);
+        ev_io_start(EV_DEFAULT_UC_ &inotify->read_watcher);
 
         Local<Object> obj = args.This();
         inotify->Wrap(obj);
 
         if(!inotify->persistent) {
-            ev_unref(EV_DEFAULT_);
+            ev_unref(EV_DEFAULT_UC);
         }
         /*Increment object references to avoid be GCed while
          I'm waiting for inotify events in th ev_pool.
@@ -220,10 +220,10 @@ namespace NodeInotify {
         }
 
         if(!inotify->persistent) {
-            ev_ref(EV_DEFAULT_);
+            ev_ref(EV_DEFAULT_UC);
         }
 
-        ev_io_stop(EV_DEFAULT_ &inotify->read_watcher);
+        ev_io_stop(EV_DEFAULT_UC_ &inotify->read_watcher);
 
         /*Eliminating the reference created inside of Inotify::New.
         The object is also weak again.
