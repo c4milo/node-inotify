@@ -1,3 +1,0 @@
-[submodule "vendor/jasmine-nodejs"]
-	path = vendor/jasmine-nodejs
-	url = git://github.com/iterationlabs/jasmine-nodejs.git
