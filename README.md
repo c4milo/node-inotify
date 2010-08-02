@@ -22,14 +22,14 @@ You must have [NodeJS][nodejs_dev] already installed to be able to build node-in
         var arg = { path: 'path to be monitorized',
                     watch_for: an optional OR'ed set of events to watch for.
                                If they're not specified, it will use
-                               inotify.IN_ALL_EVENTS by default,
+                               Inotify.IN_ALL_EVENTS by default,
                     callback: Callback function that will receive each event.
         }
 You can call this function as many times as you want to monitorize different paths.
 **Inotify monitoring of directories is not recursive**: to monitor subdirectories
 under a directory, additional watches must be created.
 
-  * `inotify.removeWatch(watch_descriptor)`: Remove a watch associated with the watch_descriptor param and returns `true` if the action was succesful or `false` in the opposite case. Removing a watch cause an `inotify.IN_IGNORED` event to be generated for this watch descriptor.
+  * `inotify.removeWatch(watch_descriptor)`: Remove a watch associated with the watch_descriptor param and returns `true` if the action was succesful or `false` in the opposite case. Removing a watch cause an `Inotify.IN_IGNORED` event to be generated for this watch descriptor.
 
   * `inotify.close()`: Remove all the watches and close the inotify's file descriptor. Returns `true` if the action was succesful or false in the opposite case.
 
@@ -55,38 +55,38 @@ directory.
 
     var callback = function(event) {
         var mask = event.mask;
-        var type = mask & inotify.IN_ISDIR ? 'Directory ' : 'File ';
+        var type = mask & Inotify.IN_ISDIR ? 'Directory ' : 'File ';
         event.name ? type += ' ' + event.name + ' ': ' ';
 
-        if(mask & inotify.IN_ACCESS) {
+        if(mask & Inotify.IN_ACCESS) {
             sys.puts(type + 'was accessed ');
-        } else if(mask & inotify.IN_MODIFY) {
+        } else if(mask & Inotify.IN_MODIFY) {
             sys.puts(type + 'was modified ');
-        } else if(mask & inotify.IN_OPEN) {
+        } else if(mask & Inotify.IN_OPEN) {
             sys.puts(type + 'was opened ');
-        } else if(mask & inotify.IN_CLOSE_NOWRITE) {
+        } else if(mask & Inotify.IN_CLOSE_NOWRITE) {
             sys.puts(type + ' opened for reading was closed ');
-        } else if(mask & inotify.IN_CLOSE_WRITE) {
+        } else if(mask & Inotify.IN_CLOSE_WRITE) {
             sys.puts(type + ' opened for writing was closed ');
-        } else if(mask & inotify.IN_MOVE) {
+        } else if(mask & Inotify.IN_MOVE) {
             sys.puts(type + 'was moved ');
-        } else if(mask & inotify.IN_ATTRIB) {
+        } else if(mask & Inotify.IN_ATTRIB) {
             sys.puts(type + 'metadata changed ');
-        } else if(mask & inotify.IN_CREATE) {
+        } else if(mask & Inotify.IN_CREATE) {
             sys.puts(type + 'created');
-        } else if(mask & inotify.IN_DELETE) {
+        } else if(mask & Inotify.IN_DELETE) {
             sys.puts(type + 'deleted');
-        } else if(mask & inotify.IN_DELETE_SELF) {
+        } else if(mask & Inotify.IN_DELETE_SELF) {
             sys.puts(type + 'watched deleted ');
-        } else if(mask & inotify.IN_MOVE_SELF) {
+        } else if(mask & Inotify.IN_MOVE_SELF) {
             sys.puts(type + 'watched moved');
-        } else if(mask & inotify.IN_IGNORED) {
+        } else if(mask & Inotify.IN_IGNORED) {
             sys.puts(type + 'watch was removed');
         }
         //sys.puts(sys.inspect(event));
     }
     var home_dir = { path:      '/home/camilo',
-                     watch_for: inotify.IN_OPEN | inotify.IN_CLOSE,
+                     watch_for: Inotify.IN_OPEN | Inotify.IN_CLOSE,
                      callback:  callback
                   };
 
@@ -101,33 +101,33 @@ directory.
 ## Inotify Events
 
 ### Watch for:
- * **inotify.IN_ACCESS:** File was accessed (read)
- * **inotify.IN_ATTRIB:** Metadata changed, e.g., permissions, timestamps, extended attributes, link count (since Linux 2.6.25), UID, GID, etc.
- * **inotify.IN_CLOSE_WRITE:** File opened for writing was closed
- * **inotify.IN_CLOSE_NOWRITE:** File not opened for writing was closed
- * **inotify.IN_CREATE:** File/directory created in the watched directory
- * **inotify.IN_DELETE:** File/directory deleted from the watched directory
- * **inotify.IN_DELETE_SELF:** Watched file/directory was deleted
- * **inotify.IN_MODIFY:** File was modified
- * **inotify.IN_MOVE_SELF:** Watched file/directory was moved
- * **inotify.IN_MOVED_FROM:** File moved out of the watched directory
- * **inotify.IN_MOVED_TO:** File moved into watched directory
- * **inotify.IN_OPEN:** File was opened
- * **inotify.IN_ALL_EVENTS:** Watch for all kind of events
- * **inotify.IN_CLOSE:**  (IN_CLOSE_WRITE | IN_CLOSE_NOWRITE)  Close
- * **inotify.IN_MOVE:**  (IN_MOVED_FROM | IN_MOVED_TO)  Moves
+ * **Inotify.IN_ACCESS:** File was accessed (read)
+ * **Inotify.IN_ATTRIB:** Metadata changed, e.g., permissions, timestamps, extended attributes, link count (since Linux 2.6.25), UID, GID, etc.
+ * **Inotify.IN_CLOSE_WRITE:** File opened for writing was closed
+ * **Inotify.IN_CLOSE_NOWRITE:** File not opened for writing was closed
+ * **Inotify.IN_CREATE:** File/directory created in the watched directory
+ * **Inotify.IN_DELETE:** File/directory deleted from the watched directory
+ * **Inotify.IN_DELETE_SELF:** Watched file/directory was deleted
+ * **Inotify.IN_MODIFY:** File was modified
+ * **Inotify.IN_MOVE_SELF:** Watched file/directory was moved
+ * **Inotify.IN_MOVED_FROM:** File moved out of the watched directory
+ * **Inotify.IN_MOVED_TO:** File moved into watched directory
+ * **Inotify.IN_OPEN:** File was opened
+ * **Inotify.IN_ALL_EVENTS:** Watch for all kind of events
+ * **Inotify.IN_CLOSE:**  (IN_CLOSE_WRITE | IN_CLOSE_NOWRITE)  Close
+ * **Inotify.IN_MOVE:**  (IN_MOVED_FROM | IN_MOVED_TO)  Moves
 
 ### Additional Flags:
- * **inotify.IN_ONLYDIR:** Only watch the path if it is a directory.
- * **inotify.IN_DONT_FOLLOW:** Do not follow symbolics links
- * **inotify.IN_ONESHOT:** Only send events once
- * **inotify.IN_MASK_ADD:** Add (OR) events to watch mask for this pathname if it already exists (instead of replacing the mask).
+ * **Inotify.IN_ONLYDIR:** Only watch the path if it is a directory.
+ * **Inotify.IN_DONT_FOLLOW:** Do not follow symbolics links
+ * **Inotify.IN_ONESHOT:** Only send events once
+ * **Inotify.IN_MASK_ADD:** Add (OR) events to watch mask for this pathname if it already exists (instead of replacing the mask).
 
 ### The following bits may be set in the `event.mask` property returned in the callback
- * **inotify.IN_IGNORED:** Watch was removed explicitly with inotify.removeWatch(watch_descriptor) or automatically (the file was deleted, or the file system was unmounted)
- * **inotify.IN_ISDIR:** Subject of this event is a directory
- * **inotify.IN_Q_OVERFLOW:** Event queue overflowed (wd is -1 for this event)
- * **inotify.IN_UNMOUNT:** File system containing the watched object was unmounted
+ * **Inotify.IN_IGNORED:** Watch was removed explicitly with inotify.removeWatch(watch_descriptor) or automatically (the file was deleted, or the file system was unmounted)
+ * **Inotify.IN_ISDIR:** Subject of this event is a directory
+ * **Inotify.IN_Q_OVERFLOW:** Event queue overflowed (wd is -1 for this event)
+ * **Inotify.IN_UNMOUNT:** File system containing the watched object was unmounted
 
 
 
