@@ -31,37 +31,36 @@ namespace NodeInotify {
                                       Inotify::Close);
 
         //Constants initialization
-        Local<ObjectTemplate> object_tmpl = t->InstanceTemplate();
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_ACCESS); //File was accessed (read)
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_ATTRIB); //Metadata changed, e.g., permissions, timestamps,
+        NODE_DEFINE_CONSTANT(t, IN_ACCESS); //File was accessed (read)
+        NODE_DEFINE_CONSTANT(t, IN_ATTRIB); //Metadata changed, e.g., permissions, timestamps,
                                                       //extended attributes, link count (since Linux 2.6.25),
                                                       //UID, GID, etc.
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_CLOSE_WRITE); //File opened for writing was closed
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_CLOSE_NOWRITE); //File not opened for writing was closed
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_CREATE); //File/directory created in watched directory
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_DELETE); //File/directory deleted from watched directory
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_DELETE_SELF); //Watched file/directory was itself deleted
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_MODIFY); //File was modified
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_MOVE_SELF); //Watched file/directory was itself moved
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_MOVED_FROM); //File moved out of watched directory
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_MOVED_TO); //File moved into watched directory
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_OPEN); //File was opened
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_IGNORED); // Watch was removed explicitly (inotify.watch.rm) or
+        NODE_DEFINE_CONSTANT(t, IN_CLOSE_WRITE); //File opened for writing was closed
+        NODE_DEFINE_CONSTANT(t, IN_CLOSE_NOWRITE); //File not opened for writing was closed
+        NODE_DEFINE_CONSTANT(t, IN_CREATE); //File/directory created in watched directory
+        NODE_DEFINE_CONSTANT(t, IN_DELETE); //File/directory deleted from watched directory
+        NODE_DEFINE_CONSTANT(t, IN_DELETE_SELF); //Watched file/directory was itself deleted
+        NODE_DEFINE_CONSTANT(t, IN_MODIFY); //File was modified
+        NODE_DEFINE_CONSTANT(t, IN_MOVE_SELF); //Watched file/directory was itself moved
+        NODE_DEFINE_CONSTANT(t, IN_MOVED_FROM); //File moved out of watched directory
+        NODE_DEFINE_CONSTANT(t, IN_MOVED_TO); //File moved into watched directory
+        NODE_DEFINE_CONSTANT(t, IN_OPEN); //File was opened
+        NODE_DEFINE_CONSTANT(t, IN_IGNORED); // Watch was removed explicitly (inotify.watch.rm) or
                                                        //automatically (file was deleted, or file system was
                                                         //unmounted)
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_ISDIR); //Subject of this event is a directory
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_Q_OVERFLOW); //Event queue overflowed (wd is -1 for this event)
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_UNMOUNT); //File system containing watched object was unmounted
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_ALL_EVENTS);
+        NODE_DEFINE_CONSTANT(t, IN_ISDIR); //Subject of this event is a directory
+        NODE_DEFINE_CONSTANT(t, IN_Q_OVERFLOW); //Event queue overflowed (wd is -1 for this event)
+        NODE_DEFINE_CONSTANT(t, IN_UNMOUNT); //File system containing watched object was unmounted
+        NODE_DEFINE_CONSTANT(t, IN_ALL_EVENTS);
 
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_ONLYDIR); // Only watch the path if it is a directory.
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_DONT_FOLLOW); // Do not follow a sym link
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_ONESHOT); // Only send event once
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_MASK_ADD); //Add (OR) events to watch mask for this pathname if it
+        NODE_DEFINE_CONSTANT(t, IN_ONLYDIR); // Only watch the path if it is a directory.
+        NODE_DEFINE_CONSTANT(t, IN_DONT_FOLLOW); // Do not follow a sym link
+        NODE_DEFINE_CONSTANT(t, IN_ONESHOT); // Only send event once
+        NODE_DEFINE_CONSTANT(t, IN_MASK_ADD); //Add (OR) events to watch mask for this pathname if it
                                                         //already exists (instead of replacing mask).
 
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_CLOSE); // (IN_CLOSE_WRITE | IN_CLOSE_NOWRITE)  Close
-        NODE_DEFINE_CONSTANT(object_tmpl, IN_MOVE);  //  (IN_MOVED_FROM | IN_MOVED_TO)  Moves
+        NODE_DEFINE_CONSTANT(t, IN_CLOSE); // (IN_CLOSE_WRITE | IN_CLOSE_NOWRITE)  Close
+        NODE_DEFINE_CONSTANT(t, IN_MOVE);  //  (IN_MOVED_FROM | IN_MOVED_TO)  Moves
 
         path_sym        = NODE_PSYMBOL("path");
         watch_for_sym   = NODE_PSYMBOL("watch_for");
@@ -73,6 +72,7 @@ namespace NodeInotify {
         cookie_sym      = NODE_PSYMBOL("cookie");
         name_sym        = NODE_PSYMBOL("name");
 
+        Local<ObjectTemplate> object_tmpl = t->InstanceTemplate();
         object_tmpl->SetAccessor(persistent_sym, Inotify::GetPersistent);
 
         t->SetClassName(String::NewSymbol("Inotify"));

@@ -1,3 +1,4 @@
+'use strict';
 sys     = require('sys');
 fs      = require('fs');
 http = require('http');
@@ -7,39 +8,39 @@ var inotify = new Inotify(); //persistent by default, new Inotify(false) //no pe
 
 var callback = function(event) {
     var mask = event.mask;
-    var type = mask & inotify.IN_ISDIR ? 'Directory ' : 'File ';
+    var type = mask & Inotify.IN_ISDIR ? 'Directory ' : 'File ';
     event.name ? type += ' ' + event.name + ' ': ' ';
 
-    if(mask & inotify.IN_ACCESS) {
+    if(mask & Inotify.IN_ACCESS) {
         sys.puts(type + 'was accessed ');
-    } else if(mask & inotify.IN_MODIFY) {
+    } else if(mask & Inotify.IN_MODIFY) {
         sys.puts(type + 'was modified ');
-    } else if(mask & inotify.IN_OPEN) {
+    } else if(mask & Inotify.IN_OPEN) {
         sys.puts(type + 'was opened ');
-    } else if(mask & inotify.IN_CLOSE_NOWRITE) {
+    } else if(mask & Inotify.IN_CLOSE_NOWRITE) {
         sys.puts(type + ' opened for reading was closed ');
-    } else if(mask & inotify.IN_CLOSE_WRITE) {
+    } else if(mask & Inotify.IN_CLOSE_WRITE) {
         sys.puts(type + ' opened for writing was closed ');
-    } else if(mask & inotify.IN_MOVE) {
+    } else if(mask & Inotify.IN_MOVE) {
         sys.puts(type + 'was moved ');
-    } else if(mask & inotify.IN_ATTRIB) {
+    } else if(mask & Inotify.IN_ATTRIB) {
         sys.puts(type + 'metadata changed ');
-    } else if(mask & inotify.IN_CREATE) {
+    } else if(mask & Inotify.IN_CREATE) {
         sys.puts(type + 'created');
-    } else if(mask & inotify.IN_DELETE) {
+    } else if(mask & Inotify.IN_DELETE) {
         sys.puts(type + 'deleted');
-    } else if(mask & inotify.IN_DELETE_SELF) {
+    } else if(mask & Inotify.IN_DELETE_SELF) {
         sys.puts(type + 'watched deleted ');
-    } else if(mask & inotify.IN_MOVE_SELF) {
+    } else if(mask & Inotify.IN_MOVE_SELF) {
         sys.puts(type + 'watched moved');
-    } else if(mask & inotify.IN_IGNORED) {
+    } else if(mask & Inotify.IN_IGNORED) {
         sys.puts(type + 'watch was removed');
     }
     //sys.puts(sys.inspect(event));
 }
 
 var tmp_dir = { path: './',
-                watch_for: inotify.IN_ALL_EVENTS,
+                watch_for: Inotify.IN_ALL_EVENTS,
                 callback: callback
                };
 
