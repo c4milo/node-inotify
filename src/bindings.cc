@@ -179,10 +179,12 @@ namespace NodeInotify {
         /* add watch */
         watch_descriptor = inotify_add_watch(inotify->fd, (const char *) *path, mask);
 
-        //Local<Function> callback = Local<Function>::Cast(args_->Get(callback_sym));
-        inotify->handle_->Set(callback_sym, args_->Get(callback_sym));
+        Local<Integer> descriptor = Integer::New(watch_descriptor);
 
-        return scope.Close(Integer::New(watch_descriptor));
+        //Local<Function> callback = Local<Function>::Cast(args_->Get(callback_sym));
+        inotify->handle_->Set(descriptor, args_->Get(callback_sym));
+
+        return scope.Close(descriptor);
     }
 
     Handle<Value> Inotify::RemoveWatch(const Arguments& args) {
@@ -203,7 +205,7 @@ namespace NodeInotify {
             ThrowException(String::New(strerror(errno)));
             return False();
         }
-
+        //inotify->handle_->Delete(args[0]->ToString());
         return True();
     }
 
@@ -225,7 +227,7 @@ namespace NodeInotify {
 
         ev_io_stop(EV_DEFAULT_UC_ &inotify->read_watcher);
 
-        /*Eliminating the reference created inside of Inotify::New.
+        /*Eliminating reference created inside of Inotify::New.
         The object is also weak again.
         Now v8 can do its stuff and GC the object.
         */
@@ -235,14 +237,10 @@ namespace NodeInotify {
     }
 
     void Inotify::Callback(EV_P_ ev_io *watcher, int revents) {
-        Inotify *inotify = static_cast<Inotify*>(watcher->data);
-
-        assert(watcher == &inotify->read_watcher);
-
         HandleScope scope;
 
-        Local<Value> callback_ = inotify->handle_->Get(callback_sym);
-        Local<Function> callback = Local<Function>::Cast(callback_);
+        Inotify *inotify = static_cast<Inotify*>(watcher->data);
+        assert(watcher == &inotify->read_watcher);
 
         char buffer[BUF_LEN];
 
@@ -267,6 +265,9 @@ namespace NodeInotify {
             argv[0] = obj;
 
             inotify->Ref();
+            Local<Value> callback_ = inotify->handle_->Get(Integer::New(event->wd));
+            Local<Function> callback = Local<Function>::Cast(callback_);
+
             callback->Call(inotify->handle_, 1, argv);
             inotify->Unref();
 
