@@ -273,7 +273,6 @@ namespace NodeInotify {
 
             if(event->mask & IN_IGNORED) {
                 //deleting callback because the watch was removed
-                printf("entrooo");
                 Local<Value> wd = Integer::New(event->wd);
                 inotify->handle_->Delete(wd->ToString());
             }
