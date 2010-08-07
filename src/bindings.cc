@@ -205,7 +205,7 @@ namespace NodeInotify {
             ThrowException(String::New(strerror(errno)));
             return False();
         }
-        //inotify->handle_->Delete(args[0]->ToString());
+
         return True();
     }
 
@@ -270,6 +270,13 @@ namespace NodeInotify {
 
             callback->Call(inotify->handle_, 1, argv);
             inotify->Unref();
+
+            if(event->mask & IN_IGNORED) {
+                //deleting callback because the watch was removed
+                printf("entrooo");
+                Local<Value> wd = Integer::New(event->wd);
+                inotify->handle_->Delete(wd->ToString());
+            }
 
             if (try_catch.HasCaught()) {
                 FatalException(try_catch);
