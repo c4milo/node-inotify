@@ -1,5 +1,5 @@
 {   "name" : "inotify",
-    "version": "0.1.3",
+    "version": "0.1.4",
     "author": "Camilo Aguilar - http://github.com/c4milo",
     "email": "camilo@cloudescape.com",
     "description" : "inotify bindings for v8 javascript engine",
