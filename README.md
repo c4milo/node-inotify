@@ -19,13 +19,13 @@ You must have [NodeJS][nodejs_dev] already installed to be able to build node-in
   You can specify `false` in `var inotify = new Inotify(false)` to use the non persistent mode.
 
   * `var wd = inotify.addWatch(arg)`:  Add a watch for files or directories. This will then return a watch descriptor. The argument is an object as follows
-        var arg = { path: 'path to be monitorized',
+        var arg = { path: 'path to be monitored',
                     watch_for: an optional OR'ed set of events to watch for.
                                If they're not specified, it will use
                                Inotify.IN_ALL_EVENTS by default,
                     callback: Callback function that will receive each event.
         }
-You can call this function as many times as you want to monitorize different paths.
+You can call this function as many times as you want to monitor different paths.
 **Inotify monitoring of directories is not recursive**: to monitor subdirectories
 under a directory, additional watches must be created.
 
