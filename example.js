@@ -1,5 +1,4 @@
 'use strict';
-require.paths.unshift('./spec/lib', './lib', './build/default/src');
 sys     = require('sys');
 fs      = require('fs');
 http = require('http');
