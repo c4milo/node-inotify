@@ -1,4 +1,5 @@
 'use strict';
+require.paths.unshift('./spec/lib', './lib', './build/default/src');
 sys     = require('sys');
 fs      = require('fs');
 http = require('http');
@@ -6,10 +7,15 @@ Inotify = require('inotify').Inotify;
 
 var inotify = new Inotify(); //persistent by default, new Inotify(false) //no persistent
 
+var data = {}; //used to correlate two events
+
 var callback = function(event) {
     var mask = event.mask;
-    var type = mask & Inotify.IN_ISDIR ? 'Directory ' : 'File ';
+    var type = mask & Inotify.IN_ISDIR ? 'directory ' : 'file ';
     event.name ? type += ' ' + event.name + ' ': ' ';
+
+    //the porpuse of this hell of 'if'
+    //statements is only illustrative.
 
     if(mask & Inotify.IN_ACCESS) {
         sys.puts(type + 'was accessed ');
@@ -21,8 +27,6 @@ var callback = function(event) {
         sys.puts(type + ' opened for reading was closed ');
     } else if(mask & Inotify.IN_CLOSE_WRITE) {
         sys.puts(type + ' opened for writing was closed ');
-    } else if(mask & Inotify.IN_MOVE) {
-        sys.puts(type + 'was moved ');
     } else if(mask & Inotify.IN_ATTRIB) {
         sys.puts(type + 'metadata changed ');
     } else if(mask & Inotify.IN_CREATE) {
@@ -35,16 +39,24 @@ var callback = function(event) {
         sys.puts(type + 'watched moved');
     } else if(mask & Inotify.IN_IGNORED) {
         sys.puts(type + 'watch was removed');
+    } else if(mask & Inotify.IN_MOVED_FROM) {
+        data = event;
+        data.type = type;
+    } else if(mask & Inotify.IN_MOVED_TO) {
+        if( Object.keys(data).length &&
+            data.cookie === event.cookie) {
+            sys.puts(type + ' moved to ' + data.type);
+            data = {};
+        }
     }
-    //sys.puts(sys.inspect(event));
 }
 
-var tmp_dir = { path: './',
-                watch_for: Inotify.IN_ALL_EVENTS,
-                callback: callback
-               };
+var dir = { path: './',
+            watch_for: Inotify.IN_ALL_EVENTS,
+            callback: callback
+          };
 
-var watch = inotify.addWatch(tmp_dir);
+var watch = inotify.addWatch(dir);
 
 http.createServer(function (request, response) {
     response.writeHead(200, {'Content-Type': 'text/plain'});
