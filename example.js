@@ -1,4 +1,3 @@
-'use strict';
 sys     = require('sys');
 fs      = require('fs');
 http = require('http');
