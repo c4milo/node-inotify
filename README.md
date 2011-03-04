@@ -46,6 +46,7 @@ directory.
 
 
 ## Example of use
+    ```javascript
     sys     = require('sys');
     fs      = require('fs');
     Inotify = require('inotify').Inotify;
@@ -97,7 +98,7 @@ directory.
                   };
 
     var home2_wd = inotify.addWatch(home2_dir);
-
+ ```
 ## Inotify Events
 
 ### Watch for:
