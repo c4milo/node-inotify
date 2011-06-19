@@ -34,11 +34,13 @@ under a directory, additional watches must be created.
   * `inotify.close()`: Remove all the watches and close the inotify's file descriptor. Returns `true` if the action was succesful or false in the opposite case.
 
 ### Event object structure
+```javascript
     var event = {   watch: Watch descriptor,
                     mask: Mask of events,
                     cookie: Cookie that permits to associate events,
                     name: Optional name of the object being watched
                 }
+```
 
 The `event.name` property is only present when an event is returned for a file inside a
 watched directory; it identifies the file pathname relative to the watched
