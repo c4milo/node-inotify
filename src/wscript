@@ -8,7 +8,7 @@ def configure(conf):
   conf.check_tool("compiler_cxx")
   conf.check_tool("node_addon")
   conf.find_program('node', var='NODE', mandatory=True)
-  conf.check_cxx(header_name="sys/inotify.h", function_name="inotify_init1")
+  conf.check_cxx(header_name="sys/inotify.h", function_name="inotify_init", mandatory=True)
 
 def build(bld):
   obj = bld.new_task_gen("cxx", "shlib", "node_addon")

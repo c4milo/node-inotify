@@ -9,8 +9,8 @@
 #include <errno.h>
 #include <string.h>
 #include <unistd.h>
-
-#define NODE_INOTIFY_VERSION "0.1.6"
+#include <fcntl.h>
+#define NODE_INOTIFY_VERSION "0.1.7"
 
 using namespace v8;
 using namespace node;
