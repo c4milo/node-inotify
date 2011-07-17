@@ -1,7 +1,7 @@
 sys     = require('sys');
 fs      = require('fs');
 http = require('http');
-Inotify = require('inotify').Inotify;
+Inotify = require('./inotify').Inotify;
 
 var inotify = new Inotify(); //persistent by default, new Inotify(false) //no persistent
 
@@ -60,5 +60,5 @@ http.createServer(function (request, response) {
     response.writeHead(200, {'Content-Type': 'text/plain'});
     response.end('Hello World\n');
 }).listen(8124);
-console.log('Http server started');
-
+console.log('Http server started in 8124');
+console.log('good it reaches this point');

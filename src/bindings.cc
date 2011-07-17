@@ -111,7 +111,7 @@ namespace NodeInotify {
         }
 
         inotify->fd = inotify_init1(IN_NONBLOCK | IN_CLOEXEC); //nonblock
-        //inotify->fd = inotify_init1(IN_CLOEXEC); //block
+        //inotify->fd = inotify_init(); //block
 
         if(inotify->fd == -1) {
             ThrowException(String::New(strerror(errno)));
@@ -244,13 +244,13 @@ namespace NodeInotify {
 
         char buffer[BUF_LEN];
 
-        int length = read(inotify->fd, buffer, BUF_LEN);
+        //int length = read(inotify->fd, buffer, BUF_LEN);
 
         Local<Value> argv[1];
         TryCatch try_catch;
 
         int i = 0;
-        while (i < length) {
+        while (i < read(inotify->fd, buffer, BUF_LEN)) {
             struct inotify_event *event;
             event = (struct inotify_event *) &buffer[i];
 
