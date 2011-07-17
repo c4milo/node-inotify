@@ -1,15 +1,17 @@
 {   "name" : "inotify",
     "version": "0.1.7",
-    "author": "Camilo Aguilar - http://github.com/c4milo",
+    "author": "Camilo Aguilar <camilo@cloudescape.com>",
     "email": "camilo@cloudescape.com",
+    "keywords": ["inotify", "watch", "monitor", "watch files", "watch directories"],
     "description" : "inotify bindings for v8 javascript engine",
     "repository": {
             "type": "git",
-            "url": "http://github.com/c4milo/node-inotify.git"
+            "url": "http://github.com/c4milo/node-inotify"
      },
     "scripts": {
        "install": "node-waf configure build"
     },
+    "engines": {"node": "0.4"},
     "main" : "inotify"
 }
 
