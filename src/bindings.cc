@@ -110,8 +110,13 @@ namespace NodeInotify {
             inotify = new Inotify();
         }
 
-        inotify->fd = inotify_init1(IN_NONBLOCK | IN_CLOEXEC); //nonblock
-        //inotify->fd = inotify_init1(IN_CLOEXEC); //block
+        #ifdef INOTIFY_INIT1
+            inotify->fd = inotify_init1(IN_NONBLOCK | IN_CLOEXEC); //nonblock
+            //inotify->fd = inotify_init1(IN_CLOEXEC); //block
+        #else
+            //old kernel versions don't have nonblock implemented yet
+            inotify->fd = inotify_init();
+        #endif
 
         if(inotify->fd == -1) {
             ThrowException(String::New(strerror(errno)));
