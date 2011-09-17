@@ -61,4 +61,3 @@ http.createServer(function (request, response) {
     response.end('Hello World\n');
 }).listen(8124);
 console.log('Http server started in 8124');
-console.log('good it reaches this point');
