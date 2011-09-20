@@ -122,7 +122,7 @@ namespace NodeInotify {
 	    flags = 0;
 	}
 
-	fcntl(inotify->fd, F_SETFL, flags | O_NONBLOCK | O_CLOEXEC);
+	fcntl(inotify->fd, F_SETFL, flags | O_NONBLOCK);
 
         ev_io_set(&inotify->read_watcher, inotify->fd, EV_READ);
         ev_io_start(EV_DEFAULT_UC_ &inotify->read_watcher);
