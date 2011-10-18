@@ -20,7 +20,6 @@ namespace NodeInotify {
     void Inotify::Initialize(Handle<Object> target) {
         Local<FunctionTemplate> t = FunctionTemplate::New(Inotify::New);
 
-        t->Inherit(EventEmitter::constructor_template);
         t->InstanceTemplate()->SetInternalFieldCount(1);
 
         NODE_SET_PROTOTYPE_METHOD(t, "addWatch",
@@ -79,13 +78,13 @@ namespace NodeInotify {
         target->Set(String::NewSymbol("Inotify"), t->GetFunction());
     }
 
-    Inotify::Inotify() : EventEmitter() {
+    Inotify::Inotify() : ObjectWrap() {
         ev_init(&read_watcher, Inotify::Callback);
         read_watcher.data = this;  //preserving my reference to use it inside Inotify::Callback
         persistent = true;
     }
 
-    Inotify::Inotify(bool nonpersistent) : EventEmitter() {
+    Inotify::Inotify(bool nonpersistent) : ObjectWrap() {
         ev_init(&read_watcher, Inotify::Callback);
         read_watcher.data = this;  //preserving my reference to use it inside Inotify::Callback
         persistent = nonpersistent;

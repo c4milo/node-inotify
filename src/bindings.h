@@ -5,7 +5,7 @@
 
 namespace NodeInotify {
 
-    class Inotify : public EventEmitter {
+    class Inotify : public ObjectWrap {
         public:
             static void Initialize(Handle<Object> target);
 
