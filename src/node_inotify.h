@@ -3,7 +3,7 @@
 #define SRC_NODE_INOTIFY_H_
 
 #include <node.h>
-#include <node_events.h>
+#include <node_object_wrap.h>
 #include <sys/inotify.h>
 #include <sys/select.h>
 #include <errno.h>
