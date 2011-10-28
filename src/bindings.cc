@@ -256,8 +256,10 @@ namespace NodeInotify {
         TryCatch try_catch;
 
         int i = 0;
-        while (i < read(inotify->fd, buffer, BUF_LEN)) {
-            struct inotify_event *event;
+	int sz = 0;
+        while ((sz = read(inotify->fd, buffer, BUF_LEN)) > 0) {
+	  struct inotify_event *event;
+	  for (i = 0; i <= (sz-EVENT_SIZE); i += (EVENT_SIZE + event->len)) {
             event = (struct inotify_event *) &buffer[i];
 
             Local<Object> obj = Object::New();
@@ -286,9 +288,8 @@ namespace NodeInotify {
             if (try_catch.HasCaught()) {
                 FatalException(try_catch);
             }
-
-            i += EVENT_SIZE + event->len;
-        }
+	  }
+	}
     }
 
     Handle<Value> Inotify::GetPersistent(Local<String> property,
