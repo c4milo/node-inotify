@@ -96,14 +96,15 @@ directory.
             }
         }
     }
-    var home_dir = { path:      '/home/camilo',
+    var home_dir = { path:      '/home/camilo', // <--- change this for a valid directory in your machine.
                      watch_for: Inotify.IN_OPEN | Inotify.IN_CLOSE,
                      callback:  callback
                   };
 
     var home_watch_descriptor = inotify.addWatch(home_dir);
 
-    var home2_dir = { path:      '/home/bob',
+    var home2_dir = { path:      '/home/bob', // <--- change this for a valid directory in your machine
+                      watch_for: Inotify.IN_ALL_EVENTS,
                       callback:  callback
                   };
 
