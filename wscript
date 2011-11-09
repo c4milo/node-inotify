@@ -1,7 +1,7 @@
 srcdir = "."
 blddir = "build"
 APPNAME = "node-inotify"
-VERSION = "0.2.0"
+VERSION = "0.2.1"
 
 def set_options(ctx):
   ctx.add_option('--exe', action='store_true', default=False)
