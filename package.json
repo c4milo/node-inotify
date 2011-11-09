@@ -1,5 +1,5 @@
 {   "name" : "inotify",
-    "version": "0.1.8",
+    "version": "0.2.0",
     "author": "Camilo Aguilar <camilo@cloudescape.com>",
     "email": "camilo@cloudescape.com",
     "keywords": ["inotify", "watch", "monitor", "watch files", "watch directories"],
@@ -11,7 +11,7 @@
     "scripts": {
        "install": "node-waf configure build"
     },
-    "engines": {"node": "0.4"},
+    "engines": {"node": "0.4 || 0.5 || 0.6"},
     "main" : "inotify"
 }
 

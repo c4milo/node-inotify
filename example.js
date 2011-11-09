@@ -1,6 +1,4 @@
-sys     = require('sys');
-fs      = require('fs');
-http = require('http');
+var http = require('http');
 Inotify = require('./inotify').Inotify;
 
 var inotify = new Inotify(); //persistent by default, new Inotify(false) //no persistent
@@ -16,34 +14,34 @@ var callback = function(event) {
     //statements is only illustrative.
 
     if(mask & Inotify.IN_ACCESS) {
-        sys.puts(type + 'was accessed ');
+        console.log(type + 'was accessed ');
     } else if(mask & Inotify.IN_MODIFY) {
-        sys.puts(type + 'was modified ');
+        console.log(type + 'was modified ');
     } else if(mask & Inotify.IN_OPEN) {
-        sys.puts(type + 'was opened ');
+        console.log(type + 'was opened ');
     } else if(mask & Inotify.IN_CLOSE_NOWRITE) {
-        sys.puts(type + ' opened for reading was closed ');
+        console.log(type + ' opened for reading was closed ');
     } else if(mask & Inotify.IN_CLOSE_WRITE) {
-        sys.puts(type + ' opened for writing was closed ');
+        console.log(type + ' opened for writing was closed ');
     } else if(mask & Inotify.IN_ATTRIB) {
-        sys.puts(type + 'metadata changed ');
+        console.log(type + 'metadata changed ');
     } else if(mask & Inotify.IN_CREATE) {
-        sys.puts(type + 'created');
+        console.log(type + 'created');
     } else if(mask & Inotify.IN_DELETE) {
-        sys.puts(type + 'deleted');
+        console.log(type + 'deleted');
     } else if(mask & Inotify.IN_DELETE_SELF) {
-        sys.puts(type + 'watched deleted ');
+        console.log(type + 'watched deleted ');
     } else if(mask & Inotify.IN_MOVE_SELF) {
-        sys.puts(type + 'watched moved');
+        console.log(type + 'watched moved');
     } else if(mask & Inotify.IN_IGNORED) {
-        sys.puts(type + 'watch was removed');
+        console.log(type + 'watch was removed');
     } else if(mask & Inotify.IN_MOVED_FROM) {
         data = event;
         data.type = type;
     } else if(mask & Inotify.IN_MOVED_TO) {
         if( Object.keys(data).length &&
             data.cookie === event.cookie) {
-            sys.puts(type + ' moved to ' + data.type);
+            console.log(type + ' moved to ' + data.type);
             data = {};
         }
     }
