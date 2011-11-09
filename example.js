@@ -1,5 +1,5 @@
 var http = require('http');
-Inotify = require('./inotify').Inotify;
+var Inotify = require('./inotify').Inotify;
 
 var inotify = new Inotify(); //persistent by default, new Inotify(false) //no persistent
 
