@@ -5,7 +5,8 @@ When a directory is monitored, inotify will return events for the directory
 itself, and for files inside the directory. [(ref: GNU/Linux Manual)][inotify.7]
 
 ## Installation
-You must have [NodeJS][nodejs_dev] already installed to be able to build node-inotify.
+You must have [NodeJS][nodejs_dev] already installed to be able to build node-inotify. Versions 0.4.x, 0.5.x and 0.6.0 of
+[NodeJS][nodejs_dev] are currently supported and tested.
 
     $ git clone git://github.com/c4milo/node-inotify.git
     $ cd node-inotify
@@ -39,7 +40,7 @@ under a directory, additional watches must be created.
                     mask: Mask of events,
                     cookie: Cookie that permits to associate events,
                     name: Optional name of the object being watched
-                }
+                };
 ```
 
 The `event.name` property is only present when an event is returned for a file inside a
@@ -50,57 +51,66 @@ directory.
 ## Example of use
 
 ```javascript
-    sys     = require('sys');
-    fs      = require('fs');
-    Inotify = require('inotify').Inotify;
+    var Inotify = require('inotify').Inotify;
+    var inotify = new Inotify(); //persistent by default, new Inotify(false) //no persistent
 
-    //You can use new Inotify(false) for a non persistent fashion.
-    var inotify = new Inotify(); //persistent by default
+    var data = {}; //used to correlate two events
 
     var callback = function(event) {
         var mask = event.mask;
-        var type = mask & Inotify.IN_ISDIR ? 'Directory ' : 'File ';
+        var type = mask & Inotify.IN_ISDIR ? 'directory ' : 'file ';
         event.name ? type += ' ' + event.name + ' ': ' ';
 
+        //the porpuse of this hell of 'if'
+        //statements is only illustrative.
+
         if(mask & Inotify.IN_ACCESS) {
-            sys.puts(type + 'was accessed ');
+            console.log(type + 'was accessed ');
         } else if(mask & Inotify.IN_MODIFY) {
-            sys.puts(type + 'was modified ');
+            console.log(type + 'was modified ');
         } else if(mask & Inotify.IN_OPEN) {
-            sys.puts(type + 'was opened ');
+            console.log(type + 'was opened ');
         } else if(mask & Inotify.IN_CLOSE_NOWRITE) {
-            sys.puts(type + ' opened for reading was closed ');
+            console.log(type + ' opened for reading was closed ');
         } else if(mask & Inotify.IN_CLOSE_WRITE) {
-            sys.puts(type + ' opened for writing was closed ');
-        } else if(mask & Inotify.IN_MOVE) {
-            sys.puts(type + 'was moved ');
+            console.log(type + ' opened for writing was closed ');
         } else if(mask & Inotify.IN_ATTRIB) {
-            sys.puts(type + 'metadata changed ');
+            console.log(type + 'metadata changed ');
         } else if(mask & Inotify.IN_CREATE) {
-            sys.puts(type + 'created');
+            console.log(type + 'created');
         } else if(mask & Inotify.IN_DELETE) {
-            sys.puts(type + 'deleted');
+            console.log(type + 'deleted');
         } else if(mask & Inotify.IN_DELETE_SELF) {
-            sys.puts(type + 'watched deleted ');
+            console.log(type + 'watched deleted ');
         } else if(mask & Inotify.IN_MOVE_SELF) {
-            sys.puts(type + 'watched moved');
+            console.log(type + 'watched moved');
         } else if(mask & Inotify.IN_IGNORED) {
-            sys.puts(type + 'watch was removed');
+            console.log(type + 'watch was removed');
+        } else if(mask & Inotify.IN_MOVED_FROM) {
+            data = event;
+            data.type = type;
+        } else if(mask & Inotify.IN_MOVED_TO) {
+            if( Object.keys(data).length &&
+                data.cookie === event.cookie) {
+                console.log(type + ' moved to ' + data.type);
+                data = {};
+            }
         }
-        //sys.puts(sys.inspect(event));
     }
-    var home_dir = { path:      '/home/camilo',
+    var home_dir = { path:      '/home/camilo', // <--- change this for a valid directory in your machine.
                      watch_for: Inotify.IN_OPEN | Inotify.IN_CLOSE,
                      callback:  callback
                   };
 
     var home_watch_descriptor = inotify.addWatch(home_dir);
 
-    var home2_dir = { path:      '/home/bob',
+    var home2_dir = { path:      '/home/bob', // <--- change this for a valid directory in your machine
+                      watch_for: Inotify.IN_ALL_EVENTS,
                       callback:  callback
                   };
 
     var home2_wd = inotify.addWatch(home2_dir);
+
 ```
 
 ## Inotify Events
