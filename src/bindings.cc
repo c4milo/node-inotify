@@ -79,24 +79,30 @@ namespace NodeInotify {
     }
 
     Inotify::Inotify() : ObjectWrap() {
-        ev_init(&read_watcher, Inotify::Callback);
-        read_watcher.data = this;  //preserving my reference to use it inside Inotify::Callback
+        //ev_init(&read_watcher, Inotify::Callback);
+        read_watcher = new uv_poll_t;
+        read_watcher->data = this;  //preserving my reference to use it inside Inotify::Callback
+        //uv_poll_init(uv_default_loop(), &read_watcher, Inotify::Callback);
         persistent = true;
     }
 
     Inotify::Inotify(bool nonpersistent) : ObjectWrap() {
-        ev_init(&read_watcher, Inotify::Callback);
-        read_watcher.data = this;  //preserving my reference to use it inside Inotify::Callback
+        read_watcher = new uv_poll_t;
+        read_watcher->data = this; //preserving my reference so that we can use it inside Inotify::Callback
+        //ev_init(&read_watcher, Inotify::Callback);
         persistent = nonpersistent;
     }
 
     Inotify::~Inotify() {
         if(!persistent) {
-            ev_ref(EV_DEFAULT_UC);
+            //ev_ref(EV_DEFAULT_UC);
+            uv_ref((uv_handle_t *) read_watcher);
         }
-        ev_io_stop(EV_DEFAULT_UC_ &read_watcher);
-        assert(!ev_is_active(&read_watcher));
-        assert(!ev_is_pending(&read_watcher));
+        //ev_io_stop(EV_DEFAULT_UC_ &read_watcher);
+        uv_poll_stop(read_watcher);
+        uv_close((uv_handle_t *) read_watcher, Inotify::on_handle_close);
+        assert(!uv_is_active((uv_handle_t *) read_watcher));
+        //assert(!uv_is_pending(&read_watcher));
     }
 
     Handle<Value> Inotify::New(const Arguments& args) {
@@ -123,18 +129,24 @@ namespace NodeInotify {
 
 	fcntl(inotify->fd, F_SETFL, flags | O_NONBLOCK);
 
-        ev_io_set(&inotify->read_watcher, inotify->fd, EV_READ);
-        ev_io_start(EV_DEFAULT_UC_ &inotify->read_watcher);
+        //ev_io_set(&inotify->read_watcher, inotify->fd, EV_READ);
+        //ev_io_start(EV_DEFAULT_UC_ &inotify->read_watcher);
+        uv_poll_init(uv_default_loop(), inotify->read_watcher, inotify->fd);
+        uv_poll_start(inotify->read_watcher, UV_READABLE, Inotify::Callback); 
 
+	
         Local<Object> obj = args.This();
         inotify->Wrap(obj);
 
         if(!inotify->persistent) {
-            ev_unref(EV_DEFAULT_UC);
+            //ev_unref(EV_DEFAULT_UC);
+            uv_unref((uv_handle_t *) inotify->read_watcher);
         }
-        /*Increment object references to avoid be GCed while
-         I'm waiting for inotify events in th ev_pool.
-         Also, the object is not weak anymore */
+        /**
+ 	 * Increment object references to avoid be GCed while
+   	 * we are waiting for events in the inotify file descriptor.
+         * Also, the object is not weak anymore. 
+	 */
         inotify->Ref();
 
         return scope.Close(obj);
@@ -214,6 +226,11 @@ namespace NodeInotify {
         return True();
     }
 
+    void Inotify::on_handle_close(uv_handle_t* handle) {
+        assert(!uv_is_active(handle));
+        delete handle;
+    }
+    
     Handle<Value> Inotify::Close(const Arguments& args) {
         HandleScope scope;
         int ret = -1;
@@ -227,11 +244,14 @@ namespace NodeInotify {
         }
 
         if(!inotify->persistent) {
-            ev_ref(EV_DEFAULT_UC);
+            //ev_ref(EV_DEFAULT_UC);
+            uv_ref((uv_handle_t *) inotify->read_watcher);
         }
 
-        ev_io_stop(EV_DEFAULT_UC_ &inotify->read_watcher);
-
+        //ev_io_stop(EV_DEFAULT_UC_ &inotify->read_watcher);
+        uv_poll_stop(inotify->read_watcher);
+        uv_close((uv_handle_t *) inotify->read_watcher, Inotify::on_handle_close);
+	
         /*Eliminating reference created inside of Inotify::New.
         The object is also weak again.
         Now v8 can do its stuff and GC the object.
@@ -241,11 +261,11 @@ namespace NodeInotify {
         return True();
     }
 
-    void Inotify::Callback(EV_P_ ev_io *watcher, int revents) {
+    void Inotify::Callback(uv_poll_t *watcher, int status, int revents) {
         HandleScope scope;
 
         Inotify *inotify = static_cast<Inotify*>(watcher->data);
-        assert(watcher == &inotify->read_watcher);
+        assert(watcher == inotify->read_watcher);
 
         char buffer[BUF_LEN];
 

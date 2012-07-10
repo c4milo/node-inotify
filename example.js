@@ -1,5 +1,6 @@
 var http = require('http');
-var Inotify = require('./inotify').Inotify;
+//var Inotify = require('./inotify').Inotify;
+var Inotify = require('./build/Release/src/inotify').Inotify;
 
 var inotify = new Inotify(); //persistent by default, new Inotify(false) //no persistent
 
@@ -53,6 +54,7 @@ var dir = { path: './',
           };
 
 var watch = inotify.addWatch(dir);
+//inotify.removeWatch(watch);
 
 http.createServer(function (request, response) {
     response.writeHead(200, {'Content-Type': 'text/plain'});
