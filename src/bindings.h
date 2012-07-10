@@ -19,12 +19,12 @@ namespace NodeInotify {
             static Handle<Value> Close(const Arguments& args);
             static Handle<Value> GetPersistent(Local<String> property,
                                              const AccessorInfo& info);
-
         private:
             int fd;
-            ev_io read_watcher;
+            uv_poll_t* read_watcher;
             bool persistent;
-            static void Callback(EV_P_ ev_io *watcher, int revents);
+            static void Callback(uv_poll_t* watcher, int status, int revents);
+            static void on_handle_close(uv_handle_t* handle);
     };
 
 }  //namespace NodeInotify
