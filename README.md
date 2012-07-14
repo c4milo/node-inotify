@@ -5,7 +5,7 @@ When a directory is monitored, inotify will return events for the directory
 itself, and for files inside the directory. [(ref: GNU/Linux Manual)][inotify.7]
 
 ## Installation
-You must have [NodeJS][nodejs_dev] already installed to be able to build node-inotify. Versions 0.4.x, 0.5.x and 0.6.0 of
+You must have [NodeJS][nodejs_dev] already installed to be able to build node-inotify. Versions 0.4.x, 0.5.x, 0.6.0 and 0.8.2 of
 [NodeJS][nodejs_dev] are currently supported and tested.
 
     $ git clone git://github.com/c4milo/node-inotify.git
