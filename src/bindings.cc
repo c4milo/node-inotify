@@ -106,7 +106,6 @@ namespace NodeInotify {
         // stop polling again thus it causes fail of assertion test
         StopPolling();
 
-        assert(!uv_is_active((uv_handle_t *) read_watcher));
         //assert(!uv_is_pending(&read_watcher));
     }
 
