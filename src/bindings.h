@@ -23,6 +23,8 @@ namespace NodeInotify {
             int fd;
             uv_poll_t* read_watcher;
             bool persistent;
+            char poll_stopped;
+            void StopPolling();
             static void Callback(uv_poll_t* watcher, int status, int revents);
             static void on_handle_close(uv_handle_t* handle);
     };
