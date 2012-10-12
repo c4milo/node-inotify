@@ -84,6 +84,7 @@ namespace NodeInotify {
         read_watcher->data = this;  //preserving my reference to use it inside Inotify::Callback
         //uv_poll_init(uv_default_loop(), &read_watcher, Inotify::Callback);
         persistent = true;
+        poll_stopped = 0;
     }
 
     Inotify::Inotify(bool nonpersistent) : ObjectWrap() {
@@ -91,6 +92,7 @@ namespace NodeInotify {
         read_watcher->data = this; //preserving my reference so that we can use it inside Inotify::Callback
         //ev_init(&read_watcher, Inotify::Callback);
         persistent = nonpersistent;
+        poll_stopped = 0;
     }
 
     Inotify::~Inotify() {
@@ -99,9 +101,11 @@ namespace NodeInotify {
             uv_ref((uv_handle_t *) read_watcher);
         }
         //ev_io_stop(EV_DEFAULT_UC_ &read_watcher);
-        uv_poll_stop(read_watcher);
-        uv_close((uv_handle_t *) read_watcher, Inotify::on_handle_close);
-        assert(!uv_is_active((uv_handle_t *) read_watcher));
+
+        // if Inotify::Close() was already called we do not need to
+        // stop polling again thus it causes fail of assertion test
+        StopPolling();
+
         //assert(!uv_is_pending(&read_watcher));
     }
 
@@ -249,8 +253,7 @@ namespace NodeInotify {
         }
 
         //ev_io_stop(EV_DEFAULT_UC_ &inotify->read_watcher);
-        uv_poll_stop(inotify->read_watcher);
-        uv_close((uv_handle_t *) inotify->read_watcher, Inotify::on_handle_close);
+        inotify->StopPolling();
 	
         /*Eliminating reference created inside of Inotify::New.
         The object is also weak again.
@@ -317,5 +320,13 @@ namespace NodeInotify {
 
         return inotify->persistent ? True() : False();
      }
-}//namespace NodeInotify
 
+    void Inotify::StopPolling() {
+        if (!poll_stopped) {
+            uv_poll_stop(read_watcher);
+            uv_close((uv_handle_t *) read_watcher, Inotify::on_handle_close);
+            poll_stopped = 1;
+        }
+    }
+
+}//namespace NodeInotify
