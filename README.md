@@ -5,15 +5,15 @@ When a directory is monitored, inotify will return events for the directory
 itself, and for files inside the directory. [(ref: GNU/Linux Manual)][inotify.7]
 
 ## Installation
-You must have [NodeJS][nodejs_dev] already installed to be able to build node-inotify. Versions 0.4.x, 0.5.x, 0.6.0 and 0.8.2 of
-[NodeJS][nodejs_dev] are currently supported and tested.
+You must have [NodeJS][nodejs_dev] already installed to be able to build node-inotify. Versions 0.8.x of [NodeJS][nodejs_dev] is currently supported and tested.
 
+### Install from NPM (Easy way)
+    $ npm install inotify
+
+### Install from git
     $ git clone git://github.com/c4milo/node-inotify.git
     $ cd node-inotify
-    $ node-waf configure build
-
-### Easy way
-    $ npm install inotify
+    $ node-gyp rebuild
 
 ## API
   * `var inotify = new Inotify()`: Create a new instance of Inotify. By default it's in persistent mode.
@@ -172,6 +172,6 @@ IN THE SOFTWARE.
 
 [inotify.7]: http://www.kernel.org/doc/man-pages/online/pages/man7/inotify.7.html "http://www.kernel.org/doc/man-pages/online/pages/man7/inotify.7.html"
 [nodejs_home]: http://www.nodejs.org
-[nodejs_dev]: http://github.com/ry/node
+[nodejs_dev]: http://github.com/joyent/node
 [code_example]: http://gist.github.com/476119
 
