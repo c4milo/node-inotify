@@ -8,9 +8,6 @@
             "type": "git",
             "url": "http://github.com/c4milo/node-inotify"
      },
-    "scripts": {
-       "install": "node-waf configure build"
-    },
     "engines": {"node": "0.8"},
     "main" : "inotify"
 }
