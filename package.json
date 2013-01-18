@@ -1,5 +1,5 @@
 {   "name" : "inotify",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "author": "Camilo Aguilar <camilo@cloudescape.com>",
     "email": "camilo@cloudescape.com",
     "keywords": ["inotify", "watch", "monitor", "watch files", "watch directories"],
@@ -8,7 +8,7 @@
             "type": "git",
             "url": "http://github.com/c4milo/node-inotify"
      },
-    "engines": {"node": "0.8"},
+    "engines": {"node": ">=0.8"},
     "main" : "inotify"
 }
 
