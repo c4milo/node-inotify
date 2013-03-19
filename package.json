@@ -1,5 +1,5 @@
 {   "name" : "inotify",
-    "version": "1.2.0",
+    "version": "1.2.1",
     "author": "Camilo Aguilar <camilo@cloudescape.com>",
     "email": "camilo@cloudescape.com",
     "keywords": ["inotify", "watch", "monitor", "watch files", "watch directories"],
