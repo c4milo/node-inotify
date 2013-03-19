@@ -23,3 +23,4 @@ namespace NodeInotify {
     }
 } //namespace NodeInotify
 
+NODE_MODULE(inotify, NodeInotify::init)
