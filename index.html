@@ -1,0 +1,250 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Node-inotify by c4milo</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Node-inotify</h1>
+        <p>Inotify bindings for google v8 javascript engine ( yes it is a nodejs addon)</p>
+        <p class="view"><a href="https://github.com/c4milo/node-inotify">View the Project on GitHub <small>c4milo/node-inotify</small></a></p>
+        <ul>
+          <li><a href="https://github.com/c4milo/node-inotify/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/c4milo/node-inotify/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/c4milo/node-inotify">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="node-inotify---monitoring-file-system-events-in-gnulinux-with-nodejs" class="anchor" href="#node-inotify---monitoring-file-system-events-in-gnulinux-with-nodejs"><span class="octicon octicon-link"></span></a>node-inotify - monitoring file system events in Gnu/Linux with <a href="http://www.nodejs.org">NodeJS</a>
+</h1>
+
+<p>The inotify API provides a mechanism for monitoring file system events.
+Inotify can be used to monitor individual files, or to monitor directories.
+When a directory is monitored, inotify will return events for the directory
+itself, and for files inside the directory. <a href="http://www.kernel.org/doc/man-pages/online/pages/man7/inotify.7.html" title="http://www.kernel.org/doc/man-pages/online/pages/man7/inotify.7.html">(ref: GNU/Linux Manual)</a></p>
+
+<h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p><a href="http://github.com/joyent/node">NodeJS</a> versions 0.8.x are currently supported and tested.</p>
+
+<h3>
+<a name="install-from-npm-easy-way" class="anchor" href="#install-from-npm-easy-way"><span class="octicon octicon-link"></span></a>Install from NPM (Easy way)</h3>
+
+<pre><code>$ npm install inotify
+</code></pre>
+
+<h3>
+<a name="install-from-git" class="anchor" href="#install-from-git"><span class="octicon octicon-link"></span></a>Install from git</h3>
+
+<pre><code>$ npm install node-gyp -g
+$ git clone git://github.com/c4milo/node-inotify.git
+$ cd node-inotify
+$ node-gyp rebuild
+</code></pre>
+
+<h2>
+<a name="api" class="anchor" href="#api"><span class="octicon octicon-link"></span></a>API</h2>
+
+<ul>
+<li><p><code>var inotify = new Inotify()</code>: Create a new instance of Inotify. By default it's in persistent mode.
+You can specify <code>false</code> in <code>var inotify = new Inotify(false)</code> to use the non persistent mode.</p></li>
+<li><p><code>var wd = inotify.addWatch(arg)</code>:  Add a watch for files or directories. This will then return a watch descriptor. The argument is an object as follows
+    var arg = { path: 'path to be monitored',
+                watch_for: an optional OR'ed set of events to watch for.
+                           If they're not specified, it will use
+                           Inotify.IN_ALL_EVENTS by default,
+                callback: Callback function that will receive each event.
+    }
+You can call this function as many times as you want to monitor different paths.
+<strong>Inotify monitoring of directories is not recursive</strong>: to monitor subdirectories
+under a directory, additional watches must be created.</p></li>
+<li><p><code>inotify.removeWatch(watch_descriptor)</code>: Remove a watch associated with the watch_descriptor param and returns <code>true</code> if the action was succesful or <code>false</code> in the opposite case. Removing a watch cause an <code>Inotify.IN_IGNORED</code> event to be generated for this watch descriptor.</p></li>
+<li><p><code>inotify.close()</code>: Remove all the watches and close the inotify's file descriptor. Returns <code>true</code> if the action was succesful or false in the opposite case.</p></li>
+</ul><h3>
+<a name="event-object-structure" class="anchor" href="#event-object-structure"><span class="octicon octicon-link"></span></a>Event object structure</h3>
+
+<div class="highlight"><pre>    <span class="kd">var</span> <span class="nx">event</span> <span class="o">=</span> <span class="p">{</span>   <span class="nx">watch</span><span class="o">:</span> <span class="nx">Watch</span> <span class="nx">descriptor</span><span class="p">,</span>
+                    <span class="nx">mask</span><span class="o">:</span> <span class="nx">Mask</span> <span class="nx">of</span> <span class="nx">events</span><span class="p">,</span>
+                    <span class="nx">cookie</span><span class="o">:</span> <span class="nx">Cookie</span> <span class="nx">that</span> <span class="nx">permits</span> <span class="nx">to</span> <span class="nx">associate</span> <span class="nx">events</span><span class="p">,</span>
+                    <span class="nx">name</span><span class="o">:</span> <span class="nx">Optional</span> <span class="nx">name</span> <span class="nx">of</span> <span class="nx">the</span> <span class="nx">object</span> <span class="nx">being</span> <span class="nx">watched</span>
+                <span class="p">};</span>
+</pre></div>
+
+<p>The <code>event.name</code> property is only present when an event is returned for a file inside a
+watched directory; it identifies the file pathname relative to the watched
+directory.</p>
+
+<h2>
+<a name="example-of-use" class="anchor" href="#example-of-use"><span class="octicon octicon-link"></span></a>Example of use</h2>
+
+<div class="highlight"><pre>    <span class="kd">var</span> <span class="nx">Inotify</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'inotify'</span><span class="p">).</span><span class="nx">Inotify</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">inotify</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Inotify</span><span class="p">();</span> <span class="c1">//persistent by default, new Inotify(false) //no persistent</span>
+
+    <span class="kd">var</span> <span class="nx">data</span> <span class="o">=</span> <span class="p">{};</span> <span class="c1">//used to correlate two events</span>
+
+    <span class="kd">var</span> <span class="nx">callback</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">event</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">mask</span> <span class="o">=</span> <span class="nx">event</span><span class="p">.</span><span class="nx">mask</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">type</span> <span class="o">=</span> <span class="nx">mask</span> <span class="o">&amp;</span> <span class="nx">Inotify</span><span class="p">.</span><span class="nx">IN_ISDIR</span> <span class="o">?</span> <span class="s1">'directory '</span> <span class="o">:</span> <span class="s1">'file '</span><span class="p">;</span>
+        <span class="nx">event</span><span class="p">.</span><span class="nx">name</span> <span class="o">?</span> <span class="nx">type</span> <span class="o">+=</span> <span class="s1">' '</span> <span class="o">+</span> <span class="nx">event</span><span class="p">.</span><span class="nx">name</span> <span class="o">+</span> <span class="s1">' '</span><span class="o">:</span> <span class="s1">' '</span><span class="p">;</span>
+
+        <span class="c1">//the porpuse of this hell of 'if'</span>
+        <span class="c1">//statements is only illustrative.</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="nx">mask</span> <span class="o">&amp;</span> <span class="nx">Inotify</span><span class="p">.</span><span class="nx">IN_ACCESS</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">type</span> <span class="o">+</span> <span class="s1">'was accessed '</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nx">mask</span> <span class="o">&amp;</span> <span class="nx">Inotify</span><span class="p">.</span><span class="nx">IN_MODIFY</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">type</span> <span class="o">+</span> <span class="s1">'was modified '</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nx">mask</span> <span class="o">&amp;</span> <span class="nx">Inotify</span><span class="p">.</span><span class="nx">IN_OPEN</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">type</span> <span class="o">+</span> <span class="s1">'was opened '</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nx">mask</span> <span class="o">&amp;</span> <span class="nx">Inotify</span><span class="p">.</span><span class="nx">IN_CLOSE_NOWRITE</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">type</span> <span class="o">+</span> <span class="s1">' opened for reading was closed '</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nx">mask</span> <span class="o">&amp;</span> <span class="nx">Inotify</span><span class="p">.</span><span class="nx">IN_CLOSE_WRITE</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">type</span> <span class="o">+</span> <span class="s1">' opened for writing was closed '</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nx">mask</span> <span class="o">&amp;</span> <span class="nx">Inotify</span><span class="p">.</span><span class="nx">IN_ATTRIB</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">type</span> <span class="o">+</span> <span class="s1">'metadata changed '</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nx">mask</span> <span class="o">&amp;</span> <span class="nx">Inotify</span><span class="p">.</span><span class="nx">IN_CREATE</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">type</span> <span class="o">+</span> <span class="s1">'created'</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nx">mask</span> <span class="o">&amp;</span> <span class="nx">Inotify</span><span class="p">.</span><span class="nx">IN_DELETE</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">type</span> <span class="o">+</span> <span class="s1">'deleted'</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nx">mask</span> <span class="o">&amp;</span> <span class="nx">Inotify</span><span class="p">.</span><span class="nx">IN_DELETE_SELF</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">type</span> <span class="o">+</span> <span class="s1">'watched deleted '</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nx">mask</span> <span class="o">&amp;</span> <span class="nx">Inotify</span><span class="p">.</span><span class="nx">IN_MOVE_SELF</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">type</span> <span class="o">+</span> <span class="s1">'watched moved'</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nx">mask</span> <span class="o">&amp;</span> <span class="nx">Inotify</span><span class="p">.</span><span class="nx">IN_IGNORED</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">type</span> <span class="o">+</span> <span class="s1">'watch was removed'</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nx">mask</span> <span class="o">&amp;</span> <span class="nx">Inotify</span><span class="p">.</span><span class="nx">IN_MOVED_FROM</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">data</span> <span class="o">=</span> <span class="nx">event</span><span class="p">;</span>
+            <span class="nx">data</span><span class="p">.</span><span class="nx">type</span> <span class="o">=</span> <span class="nx">type</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="nx">mask</span> <span class="o">&amp;</span> <span class="nx">Inotify</span><span class="p">.</span><span class="nx">IN_MOVED_TO</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span> <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">data</span><span class="p">).</span><span class="nx">length</span> <span class="o">&amp;&amp;</span>
+                <span class="nx">data</span><span class="p">.</span><span class="nx">cookie</span> <span class="o">===</span> <span class="nx">event</span><span class="p">.</span><span class="nx">cookie</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">type</span> <span class="o">+</span> <span class="s1">' moved to '</span> <span class="o">+</span> <span class="nx">data</span><span class="p">.</span><span class="nx">type</span><span class="p">);</span>
+                <span class="nx">data</span> <span class="o">=</span> <span class="p">{};</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">home_dir</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">path</span><span class="o">:</span>      <span class="s1">'/home/camilo'</span><span class="p">,</span> <span class="c1">// &lt;--- change this for a valid directory in your machine.</span>
+                     <span class="nx">watch_for</span><span class="o">:</span> <span class="nx">Inotify</span><span class="p">.</span><span class="nx">IN_OPEN</span> <span class="o">|</span> <span class="nx">Inotify</span><span class="p">.</span><span class="nx">IN_CLOSE</span><span class="p">,</span>
+                     <span class="nx">callback</span><span class="o">:</span>  <span class="nx">callback</span>
+                  <span class="p">};</span>
+
+    <span class="kd">var</span> <span class="nx">home_watch_descriptor</span> <span class="o">=</span> <span class="nx">inotify</span><span class="p">.</span><span class="nx">addWatch</span><span class="p">(</span><span class="nx">home_dir</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">home2_dir</span> <span class="o">=</span> <span class="p">{</span> <span class="nx">path</span><span class="o">:</span>      <span class="s1">'/home/bob'</span><span class="p">,</span> <span class="c1">// &lt;--- change this for a valid directory in your machine</span>
+                      <span class="nx">watch_for</span><span class="o">:</span> <span class="nx">Inotify</span><span class="p">.</span><span class="nx">IN_ALL_EVENTS</span><span class="p">,</span>
+                      <span class="nx">callback</span><span class="o">:</span>  <span class="nx">callback</span>
+                  <span class="p">};</span>
+
+    <span class="kd">var</span> <span class="nx">home2_wd</span> <span class="o">=</span> <span class="nx">inotify</span><span class="p">.</span><span class="nx">addWatch</span><span class="p">(</span><span class="nx">home2_dir</span><span class="p">);</span>
+
+</pre></div>
+
+<h2>
+<a name="inotify-events" class="anchor" href="#inotify-events"><span class="octicon octicon-link"></span></a>Inotify Events</h2>
+
+<h3>
+<a name="watch-for" class="anchor" href="#watch-for"><span class="octicon octicon-link"></span></a>Watch for:</h3>
+
+<ul>
+<li>
+<strong>Inotify.IN_ACCESS:</strong> File was accessed (read)</li>
+<li>
+<strong>Inotify.IN_ATTRIB:</strong> Metadata changed, e.g., permissions, timestamps, extended attributes, link count (since Linux 2.6.25), UID, GID, etc.</li>
+<li>
+<strong>Inotify.IN_CLOSE_WRITE:</strong> File opened for writing was closed</li>
+<li>
+<strong>Inotify.IN_CLOSE_NOWRITE:</strong> File not opened for writing was closed</li>
+<li>
+<strong>Inotify.IN_CREATE:</strong> File/directory created in the watched directory</li>
+<li>
+<strong>Inotify.IN_DELETE:</strong> File/directory deleted from the watched directory</li>
+<li>
+<strong>Inotify.IN_DELETE_SELF:</strong> Watched file/directory was deleted</li>
+<li>
+<strong>Inotify.IN_MODIFY:</strong> File was modified</li>
+<li>
+<strong>Inotify.IN_MOVE_SELF:</strong> Watched file/directory was moved</li>
+<li>
+<strong>Inotify.IN_MOVED_FROM:</strong> File moved out of the watched directory</li>
+<li>
+<strong>Inotify.IN_MOVED_TO:</strong> File moved into watched directory</li>
+<li>
+<strong>Inotify.IN_OPEN:</strong> File was opened</li>
+<li>
+<strong>Inotify.IN_ALL_EVENTS:</strong> Watch for all kind of events</li>
+<li>
+<strong>Inotify.IN_CLOSE:</strong>  (IN_CLOSE_WRITE | IN_CLOSE_NOWRITE)  Close</li>
+<li>
+<strong>Inotify.IN_MOVE:</strong>  (IN_MOVED_FROM | IN_MOVED_TO)  Moves</li>
+</ul><h3>
+<a name="additional-flags" class="anchor" href="#additional-flags"><span class="octicon octicon-link"></span></a>Additional Flags:</h3>
+
+<ul>
+<li>
+<strong>Inotify.IN_ONLYDIR:</strong> Only watch the path if it is a directory.</li>
+<li>
+<strong>Inotify.IN_DONT_FOLLOW:</strong> Do not follow symbolics links</li>
+<li>
+<strong>Inotify.IN_ONESHOT:</strong> Only send events once</li>
+<li>
+<strong>Inotify.IN_MASK_ADD:</strong> Add (OR) events to watch mask for this pathname if it already exists (instead of replacing the mask).</li>
+</ul><h3>
+<a name="the-following-bits-may-be-set-in-the-eventmask-property-returned-in-the-callback" class="anchor" href="#the-following-bits-may-be-set-in-the-eventmask-property-returned-in-the-callback"><span class="octicon octicon-link"></span></a>The following bits may be set in the <code>event.mask</code> property returned in the callback</h3>
+
+<ul>
+<li>
+<strong>Inotify.IN_IGNORED:</strong> Watch was removed explicitly with inotify.removeWatch(watch_descriptor) or automatically (the file was deleted, or the file system was unmounted)</li>
+<li>
+<strong>Inotify.IN_ISDIR:</strong> Subject of this event is a directory</li>
+<li>
+<strong>Inotify.IN_Q_OVERFLOW:</strong> Event queue overflowed (wd is -1 for this event)</li>
+<li>
+<strong>Inotify.IN_UNMOUNT:</strong> File system containing the watched object was unmounted</li>
+</ul><h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>(The MIT License)</p>
+
+<p>Copyright 2012 Camilo Aguilar. All rights reserved.</p>
+
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to
+deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+sell copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:</p>
+
+<p>The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.</p>
+
+<p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+IN THE SOFTWARE.</p>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/c4milo">c4milo</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
