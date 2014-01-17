@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/c4milo/node-inotify.png?label=ready)](https://waffle.io/c4milo/node-inotify)
 # node-inotify - monitoring file system events in Gnu/Linux with [NodeJS][nodejs_home]
 The inotify API provides a mechanism for monitoring file system events.
 Inotify can be used to monitor individual files, or to monitor directories.
