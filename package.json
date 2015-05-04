@@ -1,14 +1,25 @@
-{   "name" : "inotify",
-    "version": "1.2.1",
-    "author": "Camilo Aguilar <camilo@cloudescape.com>",
-    "email": "camilo@cloudescape.com",
-    "keywords": ["inotify", "watch", "monitor", "watch files", "watch directories"],
-    "description" : "inotify bindings for v8 javascript engine",
-    "repository": {
-            "type": "git",
-            "url": "http://github.com/c4milo/node-inotify"
-     },
-    "engines": {"node": ">=0.8"},
-    "main" : "inotify"
+{
+  "name": "inotify",
+  "version": "1.3.0",
+  "author": "Camilo Aguilar <camilo@cloudescape.com>",
+  "email": "camilo@cloudescape.com",
+  "keywords": [
+    "inotify",
+    "watch",
+    "monitor",
+    "watch files",
+    "watch directories"
+  ],
+  "description": "inotify bindings for v8 javascript engine",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/c4milo/node-inotify"
+  },
+  "engines": {
+    "node": ">=0.8"
+  },
+  "main": "inotify",
+  "dependencies": {
+    "nan": "^1.8.4"
+  }
 }
-

@@ -1,25 +1,25 @@
-// Copyright 2010, Camilo Aguilar. Cloudescape, LLC.
+// Copyright 2015, Camilo Aguilar.
 #include "bindings.h"
 
 namespace NodeInotify {
-    void InitializeInotify(Handle<Object> target) {
-        HandleScope scope;
+    void InitializeInotify(Handle<Object> exports) {
+        NanScope();
 
-        Inotify::Initialize(target);
+        Inotify::Initialize(exports);
 
-        target->Set(String::NewSymbol("version"),
+        exports->Set(NanNew<String>("version"),
                     String::New(NODE_INOTIFY_VERSION));
 
         Handle<ObjectTemplate> global = ObjectTemplate::New();
         Handle<Context> context = Context::New(NULL, global);
         Context::Scope context_scope(context);
 
-        context->Global()->Set(String::NewSymbol("Inotify"), target);
+        context->Global()->Set(NanNew<String>("Inotify"), exports);
     }
 
-    extern "C" void init (Handle<Object> target) {
-        HandleScope scope;
-        InitializeInotify(target);
+    extern "C" void init (Handle<Object> exports) {
+        NanScope();
+        InitializeInotify(exports);
     }
 } //namespace NodeInotify
 
