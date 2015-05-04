@@ -8,15 +8,6 @@
 #define BUF_LEN        (1024 * (EVENT_SIZE + 16))
 
 namespace NodeInotify {
-	static Persistent<String> path_sym;
-	static Persistent<String> watch_for_sym;
-	static Persistent<String> callback_sym;
-	static Persistent<String> persistent_sym;
-	static Persistent<String> watch_sym;
-	static Persistent<String> mask_sym;
-	static Persistent<String> cookie_sym;
-	static Persistent<String> name_sym;
-
 	void Inotify::Initialize(Handle<Object> exports) {
 		Local<FunctionTemplate> t = NanNew<FunctionTemplate>(New);
 		t->SetClassName(NanNew<String>("Inotify"));
@@ -58,17 +49,8 @@ namespace NodeInotify {
 		NODE_DEFINE_CONSTANT(exports, IN_CLOSE); // (IN_CLOSE_WRITE | IN_CLOSE_NOWRITE)  Close
 		NODE_DEFINE_CONSTANT(exports, IN_MOVE);  //  (IN_MOVED_FROM | IN_MOVED_TO)  Moves
 
-		NanAssignPersistent(path_sym, NanNew<String>("path"));
-		NanAssignPersistent(watch_for_sym, NanNew<String>("watch_for"));
-		NanAssignPersistent(callback_sym, NanNew<String>("callback"));
-		NanAssignPersistent(persistent_sym, NanNew<String>("persistent"));
-		NanAssignPersistent(watch_sym, NanNew<String>("watch"));
-		NanAssignPersistent(mask_sym, NanNew<String>("mask"));
-		NanAssignPersistent(cookie_sym, NanNew<String>("cookie"));
-		NanAssignPersistent(name_sym, NanNew<String>("name"));
-
 		Local<ObjectTemplate> object_tmpl = t->InstanceTemplate();
-		object_tmpl->SetAccessor(persistent_sym, Inotify::GetPersistent);
+		object_tmpl->SetAccessor(NanNew<String>("persistent"), Inotify::GetPersistent);
 
 		exports->Set(NanNew<String>("Inotify"), t->GetFunction());
 	}
@@ -162,16 +144,19 @@ namespace NodeInotify {
 
 		Local<Object> args_ = args[0]->ToObject();
 
-		if(!args_->Has(path_sym)) {
+		Local<String> path_sym = NanNew<String>("path");
+		if (!args_->Has(path_sym)) {
 			return NanThrowTypeError("You must specify a path to watch for events");
 		}
 
-		if(!args_->Has(callback_sym) ||
+		Local<String> callback_sym = NanNew<String>("callback");
+		if (!args_->Has(callback_sym) ||
 			!args_->Get(callback_sym)->IsFunction()) {
 			return NanThrowTypeError("You must specify a callback function");
 		}
 
-		if(!args_->Has(watch_for_sym)) {
+		Local<String> watch_for_sym = NanNew<String>("watch_for");
+		if (!args_->Has(watch_for_sym)) {
 			mask |= IN_ALL_EVENTS;
 		} else {
 			if(!args_->Get(watch_for_sym)->IsInt32()) {
@@ -266,20 +251,19 @@ namespace NodeInotify {
 		Local<Value> argv[1];
 		TryCatch try_catch;
 
-		int i = 0;
 		int sz = 0;
 		while ((sz = read(inotify->fd, buffer, BUF_LEN)) > 0) {
 			struct inotify_event *event;
-			for (i = 0; i <= (sz-EVENT_SIZE); i += (EVENT_SIZE + event->len)) {
+			for (unsigned int i = 0; i <= (sz-EVENT_SIZE); i += (EVENT_SIZE + event->len)) {
 				event = (struct inotify_event *) &buffer[i];
 
 				Local<Object> obj = NanNew<Object>();
-				obj->Set(watch_sym, NanNew<Integer>(event->wd));
-				obj->Set(mask_sym, NanNew<Integer>(event->mask));
-				obj->Set(cookie_sym, NanNew<Integer>(event->cookie));
+				obj->Set(NanNew<String>("watch"), NanNew<Integer>(event->wd));
+				obj->Set(NanNew<String>("mask"), NanNew<Integer>(event->mask));
+				obj->Set(NanNew<String>("cookie"), NanNew<Integer>(event->cookie));
 
 				if(event->len) {
-					obj->Set(name_sym, NanNew<String>(event->name));
+					obj->Set(NanNew<String>("name"), NanNew<String>(event->name));
 				}
 				argv[0] = obj;
 
