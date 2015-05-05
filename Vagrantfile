@@ -3,7 +3,8 @@ sudo apt-get install -y build-essential
 curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash -
 # curl -sL https://deb.nodesource.com/setup_0.10 | sudo bash -
 # curl -sL https://deb.nodesource.com/setup_iojs_1.x | sudo bash -
-sudo apt-get install -y nodejs
+ sudo apt-get install -y nodejs
+# sudo apt-get install -y iojs
 sudo npm install -g node-gyp
 SCRIPT
 
