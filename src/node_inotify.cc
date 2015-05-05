@@ -8,10 +8,10 @@ namespace NodeInotify {
         Inotify::Initialize(exports);
 
         exports->Set(NanNew<String>("version"),
-                    String::New(NODE_INOTIFY_VERSION));
+                    NanNew<String>(NODE_INOTIFY_VERSION));
 
         Handle<ObjectTemplate> global = ObjectTemplate::New();
-        Handle<Context> context = Context::New(NULL, global);
+        Handle<Context> context = NanNew<Context>(reinterpret_cast<ExtensionConfiguration *>(NULL), global);
         Context::Scope context_scope(context);
 
         context->Global()->Set(NanNew<String>("Inotify"), exports);

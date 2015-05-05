@@ -17,42 +17,43 @@ namespace NodeInotify {
 		NODE_SET_PROTOTYPE_METHOD(t, "removeWatch", Inotify::RemoveWatch);
 		NODE_SET_PROTOTYPE_METHOD(t, "close", Inotify::Close);
 
-		//Constants initialization
-		NODE_DEFINE_CONSTANT(exports, IN_ACCESS); //File was accessed (read)
-		NODE_DEFINE_CONSTANT(exports, IN_ATTRIB); //Metadata changed, e.g., permissions, timestamps,
-													  //extended attributes, link count (since Linux 2.6.25),
-													  //UID, GID, etc.
-		NODE_DEFINE_CONSTANT(exports, IN_CLOSE_WRITE); //File opened for writing was closed
-		NODE_DEFINE_CONSTANT(exports, IN_CLOSE_NOWRITE); //File not opened for writing was closed
-		NODE_DEFINE_CONSTANT(exports, IN_CREATE); //File/directory created in watched directory
-		NODE_DEFINE_CONSTANT(exports, IN_DELETE); //File/directory deleted from watched directory
-		NODE_DEFINE_CONSTANT(exports, IN_DELETE_SELF); //Watched file/directory was itself deleted
-		NODE_DEFINE_CONSTANT(exports, IN_MODIFY); //File was modified
-		NODE_DEFINE_CONSTANT(exports, IN_MOVE_SELF); //Watched file/directory was itself moved
-		NODE_DEFINE_CONSTANT(exports, IN_MOVED_FROM); //File moved out of watched directory
-		NODE_DEFINE_CONSTANT(exports, IN_MOVED_TO); //File moved into watched directory
-		NODE_DEFINE_CONSTANT(exports, IN_OPEN); //File was opened
-		NODE_DEFINE_CONSTANT(exports, IN_IGNORED);// Watch was removed explicitly (inotify.watch.rm) or
-											// automatically (file was deleted, or file system was
-											// unmounted)
-		NODE_DEFINE_CONSTANT(exports, IN_ISDIR); //Subject of this event is a directory
-		NODE_DEFINE_CONSTANT(exports, IN_Q_OVERFLOW); //Event queue overflowed (wd is -1 for this event)
-		NODE_DEFINE_CONSTANT(exports, IN_UNMOUNT); //File system containing watched object was unmounted
-		NODE_DEFINE_CONSTANT(exports, IN_ALL_EVENTS);
-
-		NODE_DEFINE_CONSTANT(exports, IN_ONLYDIR); // Only watch the path if it is a directory.
-		NODE_DEFINE_CONSTANT(exports, IN_DONT_FOLLOW); // Do not follow a sym link
-		NODE_DEFINE_CONSTANT(exports, IN_ONESHOT); // Only send event once
-		NODE_DEFINE_CONSTANT(exports, IN_MASK_ADD); //Add (OR) events to watch mask for this pathname if it
-											// already exists (instead of replacing mask).
-
-		NODE_DEFINE_CONSTANT(exports, IN_CLOSE); // (IN_CLOSE_WRITE | IN_CLOSE_NOWRITE)  Close
-		NODE_DEFINE_CONSTANT(exports, IN_MOVE);  //  (IN_MOVED_FROM | IN_MOVED_TO)  Moves
-
 		Local<ObjectTemplate> object_tmpl = t->InstanceTemplate();
 		object_tmpl->SetAccessor(NanNew<String>("persistent"), Inotify::GetPersistent);
 
-		exports->Set(NanNew<String>("Inotify"), t->GetFunction());
+		Local<Function> fn = t->GetFunction();
+		exports->Set(NanNew<String>("Inotify"), fn);
+
+		// Constants initialization
+		NODE_DEFINE_CONSTANT(fn, IN_ACCESS); //File was accessed (read)
+		NODE_DEFINE_CONSTANT(fn, IN_ATTRIB); //Metadata changed, e.g., permissions, timestamps,
+													  //extended attributes, link count (since Linux 2.6.25),
+													  //UID, GID, etc.
+		NODE_DEFINE_CONSTANT(fn, IN_CLOSE_WRITE); //File opened for writing was closed
+		NODE_DEFINE_CONSTANT(fn, IN_CLOSE_NOWRITE); //File not opened for writing was closed
+		NODE_DEFINE_CONSTANT(fn, IN_CREATE); //File/directory created in watched directory
+		NODE_DEFINE_CONSTANT(fn, IN_DELETE); //File/directory deleted from watched directory
+		NODE_DEFINE_CONSTANT(fn, IN_DELETE_SELF); //Watched file/directory was itself deleted
+		NODE_DEFINE_CONSTANT(fn, IN_MODIFY); //File was modified
+		NODE_DEFINE_CONSTANT(fn, IN_MOVE_SELF); //Watched file/directory was itself moved
+		NODE_DEFINE_CONSTANT(fn, IN_MOVED_FROM); //File moved out of watched directory
+		NODE_DEFINE_CONSTANT(fn, IN_MOVED_TO); //File moved into watched directory
+		NODE_DEFINE_CONSTANT(fn, IN_OPEN); //File was opened
+		NODE_DEFINE_CONSTANT(fn, IN_IGNORED);// Watch was removed explicitly (inotify.watch.rm) or
+											// automatically (file was deleted, or file system was
+											// unmounted)
+		NODE_DEFINE_CONSTANT(fn, IN_ISDIR); //Subject of this event is a directory
+		NODE_DEFINE_CONSTANT(fn, IN_Q_OVERFLOW); //Event queue overflowed (wd is -1 for this event)
+		NODE_DEFINE_CONSTANT(fn, IN_UNMOUNT); //File system containing watched object was unmounted
+		NODE_DEFINE_CONSTANT(fn, IN_ALL_EVENTS);
+
+		NODE_DEFINE_CONSTANT(fn, IN_ONLYDIR); // Only watch the path if it is a directory.
+		NODE_DEFINE_CONSTANT(fn, IN_DONT_FOLLOW); // Do not follow a sym link
+		NODE_DEFINE_CONSTANT(fn, IN_ONESHOT); // Only send event once
+		NODE_DEFINE_CONSTANT(fn, IN_MASK_ADD); //Add (OR) events to watch mask for this pathname if it
+											// already exists (instead of replacing mask).
+
+		NODE_DEFINE_CONSTANT(fn, IN_CLOSE); // (IN_CLOSE_WRITE | IN_CLOSE_NOWRITE)  Close
+		NODE_DEFINE_CONSTANT(fn, IN_MOVE);  //  (IN_MOVED_FROM | IN_MOVED_TO)  Moves
 	}
 
 	Inotify::Inotify() : ObjectWrap() {
@@ -87,7 +88,7 @@ namespace NodeInotify {
 	}
 
 	NAN_METHOD(Inotify::New) {
-		NanEscapableScope();
+		NanScope();
 
 		Inotify *inotify = NULL;
 		if(args.Length() == 1 && args[0]->IsBoolean()) {
@@ -130,11 +131,11 @@ namespace NodeInotify {
 		*/
 		inotify->Ref();
 
-		return NanEscapeScope(obj);
+		NanReturnValue(obj);
 	}
 
 	NAN_METHOD(Inotify::AddWatch) {
-		NanEscapableScope();
+		NanScope();
 		uint32_t mask = 0;
 		int watch_descriptor = 0;
 
@@ -159,11 +160,11 @@ namespace NodeInotify {
 		if (!args_->Has(watch_for_sym)) {
 			mask |= IN_ALL_EVENTS;
 		} else {
-			if(!args_->Get(watch_for_sym)->IsInt32()) {
+			if (!args_->Get(watch_for_sym)->IsInt32()) {
 				return NanThrowTypeError("You must specify OR'ed set of events");
 			}
 			mask |= args_->Get(watch_for_sym)->Int32Value();
-			if(mask == 0) {
+			if (mask == 0) {
 				return NanThrowTypeError("You must specify OR'ed set of events");
 			}
 	   }
@@ -178,9 +179,9 @@ namespace NodeInotify {
 		Local<Integer> descriptor = NanNew<Integer>(watch_descriptor);
 
 		//Local<Function> callback = Local<Function>::Cast(args_->Get(callback_sym));
-		inotify->handle_->Set(descriptor, args_->Get(callback_sym));
+		inotify->handle()->Set(descriptor, args_->Get(callback_sym));
 
-		return NanEscapeScope(descriptor);
+		NanReturnValue(descriptor);
 	}
 
 	NAN_METHOD(Inotify::RemoveWatch) {
@@ -268,16 +269,16 @@ namespace NodeInotify {
 				argv[0] = obj;
 
 				inotify->Ref();
-				Local<Value> callback_ = inotify->handle_->Get(NanNew<Integer>(event->wd));
+				Local<Value> callback_ = inotify->handle()->Get(NanNew<Integer>(event->wd));
 				Local<Function> callback = Local<Function>::Cast(callback_);
 
-				callback->Call(inotify->handle_, 1, argv);
+				callback->Call(inotify->handle(), 1, argv);
 				inotify->Unref();
 
 				if(event->mask & IN_IGNORED) {
 					//deleting callback because the watch was removed
 					Local<Value> wd = NanNew<Integer>(event->wd);
-					inotify->handle_->Delete(wd->ToString());
+					inotify->handle()->Delete(wd->ToString());
 				}
 
 				if (try_catch.HasCaught()) {
