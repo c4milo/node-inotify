@@ -179,7 +179,11 @@ namespace NodeInotify {
 		Local<Integer> descriptor = NanNew<Integer>(watch_descriptor);
 
 		//Local<Function> callback = Local<Function>::Cast(args_->Get(callback_sym));
+		#if NODE_VERSION_AT_LEAST(0, 11, 0)
 		inotify->handle()->Set(descriptor, args_->Get(callback_sym));
+		#else
+		inotify->handle_->Set(descriptor, args_->Get(callback_sym));
+		#endif
 
 		NanReturnValue(descriptor);
 	}
@@ -269,16 +273,23 @@ namespace NodeInotify {
 				argv[0] = obj;
 
 				inotify->Ref();
-				Local<Value> callback_ = inotify->handle()->Get(NanNew<Integer>(event->wd));
+
+				#if NODE_VERSION_AT_LEAST(0, 11, 0)
+				Local<Object> handle = inotify->handle();
+				#else
+				Persistent<Object> handle = inotify->handle_;
+				#endif
+
+				Local<Value> callback_ = handle->Get(NanNew<Integer>(event->wd));
 				Local<Function> callback = Local<Function>::Cast(callback_);
 
-				callback->Call(inotify->handle(), 1, argv);
+				callback->Call(handle, 1, argv);
 				inotify->Unref();
 
 				if(event->mask & IN_IGNORED) {
 					//deleting callback because the watch was removed
 					Local<Value> wd = NanNew<Integer>(event->wd);
-					inotify->handle()->Delete(wd->ToString());
+					handle->Delete(wd->ToString());
 				}
 
 				if (try_catch.HasCaught()) {
@@ -289,6 +300,7 @@ namespace NodeInotify {
 	}
 
 	NAN_GETTER(Inotify::GetPersistent) {
+		NanScope();
 		Inotify *inotify = ObjectWrap::Unwrap<Inotify>(args.This());
 
 		if (inotify->persistent) {
@@ -305,5 +317,4 @@ namespace NodeInotify {
 			poll_stopped = 1;
 		}
 	}
-
 }//namespace NodeInotify

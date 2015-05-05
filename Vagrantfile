@@ -1,8 +1,10 @@
 $script = <<SCRIPT
-sudo apt-get update -y
-apt-get install -y build-essential
+sudo apt-get install -y build-essential
 curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash -
+# curl -sL https://deb.nodesource.com/setup_0.10 | sudo bash -
+# curl -sL https://deb.nodesource.com/setup_iojs_1.x | sudo bash -
 sudo apt-get install -y nodejs
+sudo npm install -g node-gyp
 SCRIPT
 
 Vagrant.configure("2") do |config|
