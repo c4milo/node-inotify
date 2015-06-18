@@ -22,5 +22,8 @@
   "main": "inotify",
   "dependencies": {
     "nan": "^1.8.4"
+  },
+  "scripts": {
+    "test": "node-gyp configure build"
   }
 }
