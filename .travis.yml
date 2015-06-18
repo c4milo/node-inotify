@@ -3,4 +3,6 @@ node_js:
   - "0.12"
   - "0.10"
   - "0.8"
-  - "0.6"
+
+before_install:
+  - if [ "$TRAVIS_NODE_VERSION" = "0.8" ]; then npm install -g npm@2.7.3; fi;
