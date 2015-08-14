@@ -179,11 +179,7 @@ namespace NodeInotify {
 		Local<Integer> descriptor = Nan::New<Integer>(watch_descriptor);
 
 		//Local<Function> callback = Local<Function>::Cast(args_->Get(callback_sym));
-		#if NODE_VERSION_AT_LEAST(0, 11, 0)
 		inotify->handle()->Set(descriptor, args_->Get(callback_sym));
-		#else
-		inotify->handle_->Set(descriptor, args_->Get(callback_sym));
-		#endif
 
 		info.GetReturnValue().Set(descriptor);
 	}
@@ -274,11 +270,7 @@ namespace NodeInotify {
 
 				inotify->Ref();
 
-				#if NODE_VERSION_AT_LEAST(0, 11, 0)
 				Local<Object> handle = inotify->handle();
-				#else
-				Nan::Persistent<Object> handle = inotify->handle_;
-				#endif
 
 				Local<Value> callback_ = handle->Get(Nan::New<Integer>(event->wd));
 				Local<Function> callback = Local<Function>::Cast(callback_);
