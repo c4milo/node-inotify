@@ -5,7 +5,7 @@
 
 namespace NodeInotify {
 
-	class Inotify : public ObjectWrap {
+	class Inotify : public Nan::ObjectWrap {
 		public:
 			static void Initialize(Handle<Object> target);
 
