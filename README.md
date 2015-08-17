@@ -7,48 +7,58 @@ When a directory is monitored, inotify will return events for the directory
 itself, and for files inside the directory. [(ref: GNU/Linux Manual)][inotify.7]
 
 ## Installation
-[NodeJS][nodejs_dev] versions 0.8.x, 0.10.x and 0.12.x are currently supported and tested.
+[NodeJS][nodejs_dev] versions 0.10.x, 0.12.x and IO.js 1.x, 2.x, 3.x are currently supported and tested.
 
-### Install from NPM (Easy way)
+### Install from NPM
+
+```shell
     $ npm install inotify
+```
 
 ### Install from git
-    $ npm install node-gyp -g
-    $ git clone git://github.com/c4milo/node-inotify.git
-    $ cd node-inotify
-    $ node-gyp rebuild
+
+```shell
+$ npm install node-gyp -g
+$ git clone git://github.com/c4milo/node-inotify.git
+$ cd node-inotify
+$ node-gyp rebuild
+```
 
 ## API
-  * `var inotify = new Inotify()`: Create a new instance of Inotify. By default it's in persistent mode.
+  * `var inotify = new Inotify()`: Creates a new instance of Inotify. By default it's in persistent mode.
   You can specify `false` in `var inotify = new Inotify(false)` to use the non persistent mode.
 
-  * `var wd = inotify.addWatch(arg)`:  Add a watch for files or directories. This will then return a watch descriptor. The argument is an object as follows
-        var arg = { path: 'path to be monitored',
-                    watch_for: an optional OR'ed set of events to watch for.
-                               If they're not specified, it will use
-                               Inotify.IN_ALL_EVENTS by default,
-                    callback: Callback function that will receive each event.
-        }
-You can call this function as many times as you want to monitor different paths.
-**Inotify monitoring of directories is not recursive**: to monitor subdirectories
-under a directory, additional watches must be created.
+  * `var wd = inotify.addWatch(arg)`:  Adds a watch for files or directories. This will then return a watch descriptor. The argument is an object as follows
+```javascript
+    var arg = {
+        // Path to be monitored.
+        path: '.',
+        // An optional OR'ed set of events to watch for.
+        // If they're not specified, it will use
+        // Inotify.IN_ALL_EVENTS by default.
+        watch_for: Inotify.IN_ALL_EVENTS,
+        // Callback function that will receive each event.
+        callback: function (event) {}
+    }
+```
+You can call this function as many times as you want in order to monitor different paths.
+**Monitoring of directories is not recursive**: to monitor subdirectories under a directory, additional *watches* must be created.
 
-  * `inotify.removeWatch(watch_descriptor)`: Remove a watch associated with the watch_descriptor param and returns `true` if the action was succesful or `false` in the opposite case. Removing a watch cause an `Inotify.IN_IGNORED` event to be generated for this watch descriptor.
+  * `inotify.removeWatch(watch_descriptor)`: Remove a watch associated with the watch_descriptor param and returns `true` if the action was successful or `false` in the opposite case. Removing a watch causes an `Inotify.IN_IGNORED` event to be generated for this watch descriptor.
 
-  * `inotify.close()`: Remove all the watches and close the inotify's file descriptor. Returns `true` if the action was succesful or false in the opposite case.
+  * `inotify.close()`: Remove all the watches and close the inotify's file descriptor. Returns `true` if the action was successful or false in the opposite case.
 
 ### Event object structure
 ```javascript
-    var event = {   watch: Watch descriptor,
-                    mask: Mask of events,
-                    cookie: Cookie that permits to associate events,
-                    name: Optional name of the object being watched
-                };
+var event = {
+    watch: Watch descriptor,
+    mask: Mask of events,
+    cookie: Cookie that permits to associate events,
+    name: Optional name of the object being watched
+};
 ```
 
-The `event.name` property is only present when an event is returned for a file inside a
-watched directory; it identifies the file pathname relative to the watched
-directory.
+The `event.name` property is only present when an event is returned for a file inside a watched directory; it identifies the file path name relative to the watched directory.
 
 
 ## Example of use
@@ -62,55 +72,61 @@ directory.
     var callback = function(event) {
         var mask = event.mask;
         var type = mask & Inotify.IN_ISDIR ? 'directory ' : 'file ';
-        event.name ? type += ' ' + event.name + ' ': ' ';
+        if (event.name) {
+            type += ' ' + event.name + ' ';
+        } else {
+            type += ' ';
+        }
+        // the purpose of this hell of 'if' statements is only illustrative.
 
-        //the porpuse of this hell of 'if'
-        //statements is only illustrative.
-
-        if(mask & Inotify.IN_ACCESS) {
+        if (mask & Inotify.IN_ACCESS) {
             console.log(type + 'was accessed ');
-        } else if(mask & Inotify.IN_MODIFY) {
+        } else if (mask & Inotify.IN_MODIFY) {
             console.log(type + 'was modified ');
-        } else if(mask & Inotify.IN_OPEN) {
+        } else if (mask & Inotify.IN_OPEN) {
             console.log(type + 'was opened ');
-        } else if(mask & Inotify.IN_CLOSE_NOWRITE) {
+        } else if (mask & Inotify.IN_CLOSE_NOWRITE) {
             console.log(type + ' opened for reading was closed ');
-        } else if(mask & Inotify.IN_CLOSE_WRITE) {
+        } else if (mask & Inotify.IN_CLOSE_WRITE) {
             console.log(type + ' opened for writing was closed ');
-        } else if(mask & Inotify.IN_ATTRIB) {
+        } else if (mask & Inotify.IN_ATTRIB) {
             console.log(type + 'metadata changed ');
-        } else if(mask & Inotify.IN_CREATE) {
+        } else if (mask & Inotify.IN_CREATE) {
             console.log(type + 'created');
-        } else if(mask & Inotify.IN_DELETE) {
+        } else if (mask & Inotify.IN_DELETE) {
             console.log(type + 'deleted');
-        } else if(mask & Inotify.IN_DELETE_SELF) {
+        } else if (mask & Inotify.IN_DELETE_SELF) {
             console.log(type + 'watched deleted ');
-        } else if(mask & Inotify.IN_MOVE_SELF) {
+        } else if (mask & Inotify.IN_MOVE_SELF) {
             console.log(type + 'watched moved');
-        } else if(mask & Inotify.IN_IGNORED) {
+        } else if (mask & Inotify.IN_IGNORED) {
             console.log(type + 'watch was removed');
-        } else if(mask & Inotify.IN_MOVED_FROM) {
+        } else if (mask & Inotify.IN_MOVED_FROM) {
             data = event;
             data.type = type;
-        } else if(mask & Inotify.IN_MOVED_TO) {
-            if( Object.keys(data).length &&
+        } else if (mask & Inotify.IN_MOVED_TO) {
+            if ( Object.keys(data).length &&
                 data.cookie === event.cookie) {
                 console.log(type + ' moved to ' + data.type);
                 data = {};
             }
         }
     }
-    var home_dir = { path:      '/home/camilo', // <--- change this for a valid directory in your machine.
-                     watch_for: Inotify.IN_OPEN | Inotify.IN_CLOSE,
-                     callback:  callback
-                  };
+    var home_dir = {
+        // Change this for a valid directory in your machine.
+        path:      '/home/camilo',
+        watch_for: Inotify.IN_OPEN | Inotify.IN_CLOSE,
+        callback:  callback
+    };
 
     var home_watch_descriptor = inotify.addWatch(home_dir);
 
-    var home2_dir = { path:      '/home/bob', // <--- change this for a valid directory in your machine
-                      watch_for: Inotify.IN_ALL_EVENTS,
-                      callback:  callback
-                  };
+    var home2_dir = {
+        // Change this for a valid directory in your machine
+        path:      '/home/bob',
+        watch_for: Inotify.IN_ALL_EVENTS,
+        callback:  callback
+    };
 
     var home2_wd = inotify.addWatch(home2_dir);
 
@@ -156,7 +172,7 @@ http://www.quora.com/Inotify-monitoring-of-directories-is-not-recursive-Is-there
 ## License
 (The MIT License)
 
-Copyright 2015 Camilo Aguilar. All rights reserved.
+Copyright 2015 Node-Inotify AUTHORS. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to
@@ -181,4 +197,3 @@ IN THE SOFTWARE.
 [nodejs_home]: http://www.nodejs.org
 [nodejs_dev]: http://github.com/joyent/node
 [code_example]: http://gist.github.com/476119
-
