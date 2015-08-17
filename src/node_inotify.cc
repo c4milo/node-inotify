@@ -3,22 +3,22 @@
 
 namespace NodeInotify {
     void InitializeInotify(Handle<Object> exports) {
-        NanScope();
+        Nan::HandleScope scope;
 
         Inotify::Initialize(exports);
 
-        exports->Set(NanNew<String>("version"),
-                    NanNew<String>(NODE_INOTIFY_VERSION));
+        exports->Set(Nan::New<String>("version").ToLocalChecked(),
+                    Nan::New<String>(NODE_INOTIFY_VERSION).ToLocalChecked());
 
-        Handle<ObjectTemplate> global = ObjectTemplate::New();
-        Handle<Context> context = NanNew<Context>(reinterpret_cast<ExtensionConfiguration *>(NULL), global);
+        Local<ObjectTemplate> global = ObjectTemplate::New();
+        Handle<Context> context = Nan::New<Context>(reinterpret_cast<ExtensionConfiguration *>(NULL), global);
         Context::Scope context_scope(context);
 
-        context->Global()->Set(NanNew<String>("Inotify"), exports);
+        context->Global()->Set(Nan::New<String>("Inotify").ToLocalChecked(), exports);
     }
 
     extern "C" void init (Handle<Object> exports) {
-        NanScope();
+        Nan::HandleScope scope;
         InitializeInotify(exports);
     }
 } //namespace NodeInotify
