@@ -8,49 +8,54 @@ var data = {}; //used to correlate two events
 var callback = function(event) {
     var mask = event.mask;
     var type = mask & Inotify.IN_ISDIR ? 'directory ' : 'file ';
-    event.name ? type += ' ' + event.name + ' ': ' ';
+    if (event.name) {
+        type += ' ' + event.name + ' ';
+    } else {
+        type += ' ';
+    }
 
     //the porpuse of this hell of 'if'
     //statements is only illustrative.
 
-    if(mask & Inotify.IN_ACCESS) {
+    if (mask & Inotify.IN_ACCESS) {
         console.log(type + 'was accessed ');
-    } else if(mask & Inotify.IN_MODIFY) {
+    } else if (mask & Inotify.IN_MODIFY) {
         console.log(type + 'was modified ');
-    } else if(mask & Inotify.IN_OPEN) {
+    } else if (mask & Inotify.IN_OPEN) {
         console.log(type + 'was opened ');
-    } else if(mask & Inotify.IN_CLOSE_NOWRITE) {
+    } else if (mask & Inotify.IN_CLOSE_NOWRITE) {
         console.log(type + ' opened for reading was closed ');
-    } else if(mask & Inotify.IN_CLOSE_WRITE) {
+    } else if (mask & Inotify.IN_CLOSE_WRITE) {
         console.log(type + ' opened for writing was closed ');
-    } else if(mask & Inotify.IN_ATTRIB) {
+    } else if (mask & Inotify.IN_ATTRIB) {
         console.log(type + 'metadata changed ');
-    } else if(mask & Inotify.IN_CREATE) {
+    } else if (mask & Inotify.IN_CREATE) {
         console.log(type + 'created');
-    } else if(mask & Inotify.IN_DELETE) {
+    } else if (mask & Inotify.IN_DELETE) {
         console.log(type + 'deleted');
-    } else if(mask & Inotify.IN_DELETE_SELF) {
+    } else if (mask & Inotify.IN_DELETE_SELF) {
         console.log(type + 'watched deleted ');
-    } else if(mask & Inotify.IN_MOVE_SELF) {
+    } else if (mask & Inotify.IN_MOVE_SELF) {
         console.log(type + 'watched moved');
-    } else if(mask & Inotify.IN_IGNORED) {
+    } else if (mask & Inotify.IN_IGNORED) {
         console.log(type + 'watch was removed');
-    } else if(mask & Inotify.IN_MOVED_FROM) {
+    } else if (mask & Inotify.IN_MOVED_FROM) {
         data = event;
         data.type = type;
-    } else if(mask & Inotify.IN_MOVED_TO) {
-        if( Object.keys(data).length &&
+    } else if (mask & Inotify.IN_MOVED_TO) {
+        if ( Object.keys(data).length &&
             data.cookie === event.cookie) {
             console.log(type + ' moved to ' + data.type);
             data = {};
         }
     }
-}
+};
 
-var dir = { path: './',
-            watch_for: Inotify.IN_ALL_EVENTS,
-            callback: callback
-          };
+var dir = {
+    path: './',
+    watch_for: Inotify.IN_ALL_EVENTS,
+    callback: callback
+};
 
 var watch = inotify.addWatch(dir);
 //inotify.removeWatch(watch);
