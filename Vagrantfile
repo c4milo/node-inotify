@@ -1,9 +1,13 @@
 $script = <<SCRIPT
 sudo apt-get install -y build-essential
-curl -sL https://deb.nodesource.com/setup_0.12 | sudo bash -
-# curl -sL https://deb.nodesource.com/setup_0.10 | sudo bash -
-# curl -sL https://deb.nodesource.com/setup_iojs_1.x | sudo bash -
- sudo apt-get install -y nodejs
+sudo apt-get install git-core g++ -y
+# curl -sL https://deb.nodesource.com/setup_0.12 | sudo -E bash -
+curl -sL https://deb.nodesource.com/setup_0.10 | sudo -E bash -
+# curl -sL https://deb.nodesource.com/setup_iojs_1.x | sudo -E bash -
+# curl -sL https://deb.nodesource.com/setup_iojs_3.x | sudo -E bash -
+# curl -sL https://deb.nodesource.com/setup_iojs_2.x | sudo -E bash -
+
+sudo apt-get install -y nodejs
 # sudo apt-get install -y iojs
 sudo npm install -g node-gyp
 SCRIPT
