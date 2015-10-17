@@ -250,7 +250,7 @@ namespace NodeInotify {
 		//int length = read(inotify->fd, buffer, BUF_LEN);
 
 		Local<Value> argv[1];
-		TryCatch try_catch;
+		Nan::TryCatch try_catch;
 
 		int sz = 0;
 		while ((sz = read(inotify->fd, buffer, BUF_LEN)) > 0) {
@@ -285,7 +285,7 @@ namespace NodeInotify {
 				}
 
 				if (try_catch.HasCaught()) {
-					FatalException(try_catch);
+					Nan::FatalException(try_catch);
 				}
 			} // for
 		} // while
