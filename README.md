@@ -7,7 +7,7 @@ When a directory is monitored, inotify will return events for the directory
 itself, and for files inside the directory. [(ref: GNU/Linux Manual)][inotify.7]
 
 ## Installation
-[NodeJS][nodejs_dev] versions 0.10.x, 0.12.x and IO.js 1.x, 2.x, 3.x are currently supported and tested.
+[NodeJS][nodejs_dev] versions 0.10.x, 0.12.x, 4.x.x, 5.x.x and IO.js 1.x, 2.x, 3.x are currently supported and tested.
 
 ### Install from NPM
 
