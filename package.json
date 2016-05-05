@@ -24,6 +24,7 @@
   },
   "main": "inotify",
   "dependencies": {
+    "bindings": "^1.2.1",
     "nan": "^2.0.5"
   },
   "scripts": {
