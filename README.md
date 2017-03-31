@@ -172,7 +172,7 @@ http://www.quora.com/Inotify-monitoring-of-directories-is-not-recursive-Is-there
 ## License
 (The MIT License)
 
-Copyright 2016 Node-Inotify AUTHORS. All rights reserved.
+Copyright 2017 Node-Inotify AUTHORS. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to
