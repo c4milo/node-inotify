@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/c4milo/node-inotify.png?label=ready)](https://waffle.io/c4milo/node-inotify)
 # node-inotify - monitoring file system events in Gnu/Linux with [NodeJS][nodejs_home]
 [![Build Status](https://travis-ci.org/c4milo/node-inotify.svg?branch=master)](https://travis-ci.org/c4milo/node-inotify)
 
