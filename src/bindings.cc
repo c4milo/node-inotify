@@ -272,10 +272,11 @@ namespace NodeInotify {
 
 				Local<Object> handle = inotify->handle();
 
-				Local<Value> callback_ = handle->Get(Nan::New<Integer>(event->wd));
-				Local<Function> callback = Local<Function>::Cast(callback_);
+				Local<Value> value = handle->Get(Nan::New<Integer>(event->wd));
+				Local<Function> func = Local<Function>::Cast(value);
 
-				callback->Call(handle, 1, argv);
+				Nan::Callback callback(func);
+				callback.Call(handle, 1, argv);
 				inotify->Unref();
 
 				if(event->mask & IN_IGNORED) {
