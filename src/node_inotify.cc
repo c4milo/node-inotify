@@ -10,7 +10,8 @@ namespace NodeInotify {
         exports->Set(Nan::New<String>("version").ToLocalChecked(),
                     Nan::New<String>(NODE_INOTIFY_VERSION).ToLocalChecked());
 
-        Local<ObjectTemplate> global = ObjectTemplate::New();
+        v8::Isolate* isolate = v8::Isolate::GetCurrent();
+        Local<ObjectTemplate> global = ObjectTemplate::New(isolate);
         Handle<Context> context = Nan::New<Context>(reinterpret_cast<ExtensionConfiguration *>(NULL), global);
         Context::Scope context_scope(context);
 
