@@ -1,4 +1,4 @@
-# node-inotify - monitoring file system events in Gnu/Linux with [NodeJS][nodejs_home]
+# node-inotify - monitoring file system events in GNU/Linux with [NodeJS][nodejs_home]
 [![Build Status](https://travis-ci.org/c4milo/node-inotify.svg?branch=master)](https://travis-ci.org/c4milo/node-inotify)
 
 The inotify API provides a mechanism for monitoring file system events.
@@ -7,7 +7,7 @@ When a directory is monitored, inotify will return events for the directory
 itself, and for files inside the directory. [(ref: GNU/Linux Manual)][inotify.7]
 
 ## Installation
-[NodeJS][nodejs_dev] versions 0.10.x, 0.12.x, 4.x.x, 5.x.x and IO.js 1.x, 2.x, 3.x are currently supported and tested.
+[NodeJS][nodejs_dev] versions 4.x.x up to 11.x.x are currently supported and tested.
 
 ### Install from NPM
 
@@ -172,7 +172,7 @@ http://www.quora.com/Inotify-monitoring-of-directories-is-not-recursive-Is-there
 ## License
 (The MIT License)
 
-Copyright 2017 Node-Inotify AUTHORS. All rights reserved.
+Copyright 2019 node-inotify AUTHORS. All rights reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to
