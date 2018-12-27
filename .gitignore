@@ -1,7 +1,6 @@
 .vagrant
 node_modules
 build
-.lock-*
 *.swp
 *.swo
 *.swn
