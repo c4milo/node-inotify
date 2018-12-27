@@ -1,0 +1,8 @@
+build
+node_modules
+.vscode
+.vagrant
+Vagrantfile
+docker-compose.yml
+dockerfile
+
