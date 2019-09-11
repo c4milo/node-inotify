@@ -11,7 +11,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <fcntl.h>
-#include "nan.h"
+#include <nan.h>
+
 #define NODE_INOTIFY_VERSION "1.3.0"
 
 using namespace v8;

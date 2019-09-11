@@ -8,7 +8,7 @@
 #define BUF_LEN        (1024 * (EVENT_SIZE + 16))
 
 namespace NodeInotify {
-	void Inotify::Initialize(Handle<Object> exports) {
+	void Inotify::Initialize(Local<Object> exports) {
 		Local<FunctionTemplate> t = Nan::New<FunctionTemplate>(New);
 		t->SetClassName(Nan::New<String>("Inotify").ToLocalChecked());
 		t->InstanceTemplate()->SetInternalFieldCount(1);
@@ -20,8 +20,13 @@ namespace NodeInotify {
 		Local<ObjectTemplate> object_tmpl = t->InstanceTemplate();
 		Nan::SetAccessor(object_tmpl, Nan::New<String>("persistent").ToLocalChecked(), Inotify::GetPersistent);
 
-		Local<Function> fn = t->GetFunction();
-		exports->Set(Nan::New<String>("Inotify").ToLocalChecked(), fn);
+
+		auto ctx = v8::Isolate::GetCurrent()->GetCurrentContext();
+
+
+		Local<Function> fn = t->GetFunction(ctx).ToLocalChecked();
+
+		exports->Set(ctx, Nan::New<String>("Inotify").ToLocalChecked(), fn);
 
 		// Constants initialization
 		NODE_DEFINE_CONSTANT(fn, IN_ACCESS); //File was accessed (read)
@@ -143,33 +148,36 @@ namespace NodeInotify {
 			return Nan::ThrowTypeError("You must specify an object as first argument");
 		}
 
-		Local<Object> args_ = info[0]->ToObject();
+		auto i = v8::Isolate::GetCurrent();
+		auto ctx = i->GetCurrentContext();
+
+		Local<Object> args_ = info[0]->ToObject(ctx).ToLocalChecked();
 
 		Local<String> path_sym = Nan::New<String>("path").ToLocalChecked();
-		if (!args_->Has(path_sym)) {
+		if (!args_->Has(ctx, path_sym).FromJust()) {
 			return Nan::ThrowTypeError("You must specify a path to watch for events");
 		}
 
 		Local<String> callback_sym = Nan::New<String>("callback").ToLocalChecked();
-		if (!args_->Has(callback_sym) ||
-			!args_->Get(callback_sym)->IsFunction()) {
+		if (!args_->Has(ctx, callback_sym).FromJust() ||
+			!args_->Get(ctx, callback_sym).ToLocalChecked()->IsFunction()) {
 			return Nan::ThrowTypeError("You must specify a callback function");
 		}
 
 		Local<String> watch_for_sym = Nan::New<String>("watch_for").ToLocalChecked();
-		if (!args_->Has(watch_for_sym)) {
+		if (!args_->Has(ctx, watch_for_sym).FromJust()) {
 			mask |= IN_ALL_EVENTS;
 		} else {
-			if (!args_->Get(watch_for_sym)->IsInt32()) {
+			if (!args_->Get(ctx, watch_for_sym).ToLocalChecked()->IsInt32()) {
 				return Nan::ThrowTypeError("You must specify OR'ed set of events");
 			}
-			mask |= args_->Get(watch_for_sym)->Int32Value();
+			mask |= args_->Get(ctx, watch_for_sym).ToLocalChecked()->Int32Value(ctx).FromJust();
 			if (mask == 0) {
 				return Nan::ThrowTypeError("You must specify OR'ed set of events");
 			}
 	   }
 
-		String::Utf8Value path(args_->Get(path_sym));
+		String::Utf8Value path(i, args_->Get(ctx, path_sym).ToLocalChecked());
 
 		Inotify *inotify = Nan::ObjectWrap::Unwrap<Inotify>(info.This());
 
@@ -179,20 +187,22 @@ namespace NodeInotify {
 		Local<Integer> descriptor = Nan::New<Integer>(watch_descriptor);
 
 		//Local<Function> callback = Local<Function>::Cast(args_->Get(callback_sym));
-		inotify->handle()->Set(descriptor, args_->Get(callback_sym));
+		inotify->handle()->Set(ctx, descriptor, args_->Get(ctx, callback_sym).ToLocalChecked());
 
 		info.GetReturnValue().Set(descriptor);
 	}
 
 	NAN_METHOD(Inotify::RemoveWatch) {
 		Nan::HandleScope scope;
+		auto i = v8::Isolate::GetCurrent();
+		auto ctx = i->GetCurrentContext();
 		uint32_t watch = 0;
 		int ret = -1;
 
 		if(info.Length() == 0 || !info[0]->IsInt32()) {
 			return Nan::ThrowTypeError("You must specify a valid watcher descriptor as argument");
 		}
-		watch = info[0]->Int32Value();
+		watch = info[0]->Int32Value(ctx).FromJust();
 
 		Inotify *inotify = Nan::ObjectWrap::Unwrap<Inotify>(info.This());
 
@@ -241,6 +251,8 @@ namespace NodeInotify {
 
 	void Inotify::Callback(uv_poll_t *watcher, int status, int revents) {
 		Nan::HandleScope scope;
+		auto i = v8::Isolate::GetCurrent();
+		auto ctx = i->GetCurrentContext();
 
 		Inotify *inotify = static_cast<Inotify*>(watcher->data);
 		assert(watcher == inotify->read_watcher);
@@ -259,12 +271,12 @@ namespace NodeInotify {
 				event = (struct inotify_event *) &buffer[i];
 
 				Local<Object> obj = Nan::New<Object>();
-				obj->Set(Nan::New<String>("watch").ToLocalChecked(), Nan::New<Integer>(event->wd));
-				obj->Set(Nan::New<String>("mask").ToLocalChecked(), Nan::New<Integer>(event->mask));
-				obj->Set(Nan::New<String>("cookie").ToLocalChecked(), Nan::New<Integer>(event->cookie));
+				obj->Set(ctx, Nan::New<String>("watch").ToLocalChecked(), Nan::New<Integer>(event->wd));
+				obj->Set(ctx, Nan::New<String>("mask").ToLocalChecked(), Nan::New<Integer>(event->mask));
+				obj->Set(ctx, Nan::New<String>("cookie").ToLocalChecked(), Nan::New<Integer>(event->cookie));
 
 				if(event->len) {
-					obj->Set(Nan::New<String>("name").ToLocalChecked(), Nan::New<String>(event->name).ToLocalChecked());
+					obj->Set(ctx, Nan::New<String>("name").ToLocalChecked(), Nan::New<String>(event->name).ToLocalChecked());
 				}
 				argv[0] = obj;
 
@@ -272,17 +284,17 @@ namespace NodeInotify {
 
 				Local<Object> handle = inotify->handle();
 
-				Local<Value> value = handle->Get(Nan::New<Integer>(event->wd));
+				Local<Value> value = handle->Get(ctx, Nan::New<Integer>(event->wd)).ToLocalChecked();
 				Local<Function> func = Local<Function>::Cast(value);
 
 				Nan::Callback callback(func);
-				callback.Call(handle, 1, argv);
+				Nan::Call(callback, handle, 1, argv);
 				inotify->Unref();
 
 				if(event->mask & IN_IGNORED) {
 					//deleting callback because the watch was removed
 					Local<Value> wd = Nan::New<Integer>(event->wd);
-					handle->Delete(wd->ToString());
+					handle->Delete(ctx, wd->ToString(ctx).ToLocalChecked());
 				}
 
 				if (try_catch.HasCaught()) {

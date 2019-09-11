@@ -7,7 +7,7 @@ namespace NodeInotify {
 
 	class Inotify : public Nan::ObjectWrap {
 		public:
-			static void Initialize(Handle<Object> target);
+			static void Initialize(Local<Object> target);
 
 			Inotify();
 			Inotify(bool nonpersistent);
