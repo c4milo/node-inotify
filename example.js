@@ -45,7 +45,7 @@ var callback = function(event) {
     } else if (mask & Inotify.IN_MOVED_TO) {
         if ( Object.keys(data).length &&
             data.cookie === event.cookie) {
-            console.log(type + ' moved to ' + data.type);
+            console.log(data.type + ' moved to ' + type);
             data = {};
         }
     }
